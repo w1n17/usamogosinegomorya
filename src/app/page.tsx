@@ -1,20 +1,22 @@
-"use client";
-
-import { motion } from "framer-motion";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import Contact from "@/components/Contact";
+import Welcome from "@/components/Welcome";
+import Rooms from "@/components/Rooms";
+import Amenities from "@/components/Amenities";
+import Footer from "@/components/Footer";
 
+// Главная страница мини-гостиницы
 export default function Home() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800">
+    <div className="min-h-screen bg-white">
       <Header />
       <main>
         <Hero />
-        <Features />
-        <Contact />
+        <Welcome />
+        <Rooms />
+        <Amenities />
       </main>
+      <Footer />
     </div>
   );
 }

@@ -1,73 +1,68 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 
+// Hero секция с приветствием и кнопкой бронирования
 export default function Hero() {
   return (
-    <section id="home" className="min-h-screen flex items-center justify-center pt-20">
-      <div className="container mx-auto px-6 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
+    <section
+      id="hero"
+      className="relative isolate min-h-screen pt-16 md:pt-20"
+    >
+      <div className="absolute inset-0 z-0">
+        <Image
+          src="/image/main/main.jpg"
+          alt="Море"
+          fill
+          priority
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-black/30 to-black/60" />
+      </div>
+
+      <div className="relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-5xl text-center">
           <motion.h1
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-5xl md:text-7xl font-bold mb-6 bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="font-bold text-white leading-[1.05] text-[36px] sm:text-[48px] lg:text-[60px] xl:text-[72px]"
           >
-            Welcome to the Future
+            У самого синего
+            <br />
+            моря
           </motion.h1>
-        </motion.div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-8 max-w-3xl mx-auto"
-        >
-          Experience the power of modern web development with Next.js and Framer Motion
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center"
-        >
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 bg-linear-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-shadow"
+          <motion.p
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.35 }}
+            className="mt-4 sm:mt-5 text-white/90 text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] max-w-2xl mx-auto"
           >
-            Get Started
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-8 py-4 border-2 border-slate-300 dark:border-slate-600 rounded-full font-semibold hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
-          >
-            Learn More
-          </motion.button>
-        </motion.div>
+            Мини гостиница в поселке Лазаревское на 9 номеров
+            <br />
+            в 30 метрах от пляжа
+            <br />
+            «Лагуна»
+          </motion.p>
 
-        <motion.div
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1 }}
-          className="mt-16"
-        >
           <motion.div
-            animate={{ y: [0, -10, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            className="text-slate-400 dark:text-slate-500"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="mt-8 sm:mt-10 flex justify-center"
           >
-            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-            </svg>
+            <motion.a
+              href="#rooms"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="inline-flex items-center justify-center bg-[#0047AB] text-white font-semibold rounded-[8px] w-[266px] h-[56px] text-[16px] whitespace-nowrap hover:bg-[#003a8c] transition-colors"
+            >
+              Выбрать номер
+            </motion.a>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
