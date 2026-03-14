@@ -2,7 +2,7 @@
 
 /* Основные CSS переменные для проекта мини-гостиницы */
 :root {
-  --background: #ffffff;
+  --background: rgb(0 91 150 / 0.1);
   --foreground: #171717;
   --primary: #0047AB;
   --hero-bg: #F7F3EB;
@@ -20,6 +20,7 @@
 
 body {
   background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: 'Montserrat', sans-serif;
 }

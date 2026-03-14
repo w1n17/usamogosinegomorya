@@ -4,6 +4,15 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import RoomTagPill from "@/components/RoomTagPill";
 
+function truncateByWords(text: string, maxChars: number) {
+  const normalized = (text ?? "").replace(/\s+/g, " ").trim();
+  if (normalized.length <= maxChars) return normalized;
+  const cut = normalized.slice(0, maxChars);
+  const lastSpace = cut.lastIndexOf(" ");
+  const safe = (lastSpace > 20 ? cut.slice(0, lastSpace) : cut).trim();
+  return `${safe}...`;
+}
+
 type RoomCardProps = {
   title: string;
   description: string;
@@ -26,7 +35,7 @@ export default function RoomCard({
       whileHover={{ y: -4, boxShadow: "0 18px 48px rgba(15, 23, 42, 0.10)" }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="w-full max-w-[352px] h-[442px] bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col cursor-pointer"
+      className="w-full max-w-[352px] h-[442px] bg-[#E0F2F1]/30 rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col cursor-pointer"
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}
@@ -57,26 +66,32 @@ export default function RoomCard({
       </div>
 
       <div className="px-5 pt-4 pb-5 flex-1 flex flex-col">
-        <h3 className="font-bold text-slate-900 text-[18px] xl:text-[20px] leading-snug">
-          {title}
-        </h3>
+        <div className="flex-none">
+          <h3 className="font-bold text-slate-900 text-[18px] xl:text-[20px] leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] min-h-[44px]">
+            {title}
+          </h3>
+        </div>
 
-        <p className="mt-2 text-slate-500 text-[14px] leading-relaxed">
-          {description}
-        </p>
+        <div className="mt-0 flex-none h-[66px] overflow-hidden">
+          <p className="text-slate-500 text-[14px] leading-[1.45]">
+            {truncateByWords(description, 80)}
+          </p>
+        </div>
 
         {tags.length > 0 ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
-            className="mt-auto pt-5 flex flex-wrap gap-2"
+            className="mt-auto pt-2 h-[72px] overflow-hidden flex flex-wrap items-end content-end gap-2"
           >
             {tags.map((tag) => (
               <RoomTagPill key={tag} tag={tag} />
             ))}
           </motion.div>
-        ) : null}
+        ) : (
+          <div className="mt-auto pt-2 h-[72px]" />
+        )}
       </div>
     </motion.article>
   );

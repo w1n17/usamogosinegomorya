@@ -9,17 +9,19 @@ import Image from "next/image";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  const phoneDisplay = "+7 977 804-96-61";
+  const phoneDigits = "79778049661";
+
   const scrollToFooter = () => {
     const el = document.getElementById("footer");
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const navItems = [
-    { name: "Главная", href: "#hero" },
-    { name: "О нас", href: "#welcome" },
     { name: "Номера", href: "#rooms" },
-    { name: "Удобства", href: "#amenities" },
-    { name: "Контакты", href: "#footer" },
+    { name: "Отзывы", href: "/reviews" },
+    { name: "Правила проживания", href: "/rules" },
+    { name: "Акции", href: "/promotions" },
   ];
 
   return (
@@ -27,7 +29,7 @@ export default function Header() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-sm shadow-sm"
+      className="fixed top-0 left-0 right-0 z-50 bg-[#E0F2F1]/70 backdrop-blur-sm shadow-sm"
     >
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 md:h-20">
@@ -71,7 +73,7 @@ export default function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="shrink-0"
+              className="shrink-0 flex items-center gap-7"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
@@ -81,6 +83,13 @@ export default function Header() {
               >
                 Забронировать
               </motion.button>
+
+              <a
+                href={`tel:+${phoneDigits}`}
+                className="text-gray-700 hover:text-[#0047AB] transition-colors font-semibold whitespace-nowrap text-[16px]"
+              >
+                {phoneDisplay}
+              </a>
             </motion.div>
           </div>
 
@@ -132,6 +141,14 @@ export default function Header() {
                   >
                     Забронировать
                   </button>
+                </li>
+                <li>
+                  <a
+                    href={`tel:+${phoneDigits}`}
+                    className="block py-2 text-gray-700 hover:text-[#0047AB] transition-colors font-semibold"
+                  >
+                    {phoneDisplay}
+                  </a>
                 </li>
               </ul>
             </motion.div>

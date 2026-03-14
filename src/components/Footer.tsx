@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 
 // Footer с контактной информацией
 export default function Footer() {
@@ -15,8 +16,8 @@ export default function Footer() {
 
   return (
     <footer id="footer" className="bg-[#0F172A] text-white">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 md:items-start">
+      <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 py-12 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 items-start">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -33,12 +34,8 @@ export default function Footer() {
               </div>
             </div>
 
-            <p className="mt-4 text-slate-300/80 text-[14px] leading-relaxed max-w-md">
-              Ваш идеальный отдых на черноморском побережье в городе Сочи поселке Лазаревское. 9
-              комфортабельных номеров для проживания в уютных и благоустроенных в 30 метрах от пляжа.
-            </p>
 
-            <div className="mt-6 relative w-full max-w-[420px] h-[170px] rounded-xl overflow-hidden border border-white/10 bg-white/5">
+            <div className="mt-6 relative w-full h-[230px] rounded-xl overflow-hidden border border-white/10 bg-[#E0F2F1]/10">
               <iframe
                 src={yandexMapWidgetUrl}
                 title="Яндекс Карты"
@@ -80,16 +77,14 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.55, delay: 0.05 }}
-            className="md:col-span-1 md:justify-self-center"
+            className="md:col-span-1"
           >
             <div className="font-semibold text-[16px]">Контакты</div>
             <div className="mt-5 space-y-5 text-slate-300/85 text-[14px]">
               <div className="flex items-start gap-3">
                 <Image src="/image/footer-contacts/flag.png" alt="" width={20} height={20} className="shrink-0 mt-0.5" />
                 <div>
-                  Рыбацкий
-                  <br />
-                  переулок, 55
+                  Рыбацкий переулок, 55
                 </div>
               </div>
 
@@ -99,12 +94,40 @@ export default function Footer() {
                   {phoneDisplay}
                 </a>
               </div>
+            </div>
 
-              <div className="flex items-center gap-3">
-                <Image src="/image/footer-contacts/review.png" alt="" width={20} height={20} className="shrink-0" />
-                <a className="hover:text-white transition-colors" href="#reviews">
-                  Отзывы
-                </a>
+            <div className="mt-10">
+              <div className="font-semibold text-[16px]">Бронирование</div>
+              <p className="mt-4 text-slate-300/85 text-[14px] leading-relaxed">
+                Свяжитесь с нами удобным способом
+                <br />
+                для уточнения наличия мест.
+              </p>
+
+              <div className="mt-6 space-y-3">
+                <motion.a
+                  href={`https://t.me/${telegramUsername}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
+                >
+                  <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
+                  Написать в Telegram
+                </motion.a>
+
+                <motion.a
+                  href={`https://wa.me/${phoneDigits}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
+                >
+                  <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
+                  Написать в WhatsApp
+                </motion.a>
               </div>
             </div>
           </motion.div>
@@ -113,40 +136,20 @@ export default function Footer() {
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.55, delay: 0.1 }}
-            className="md:col-span-1 md:justify-self-end"
+            transition={{ duration: 0.55, delay: 0.08 }}
+            className="md:col-span-1 md:justify-self-end md:text-right"
           >
-            <div className="font-semibold text-[16px]">Бронирование</div>
-            <p className="mt-4 text-slate-300/85 text-[14px] leading-relaxed max-w-sm">
-              Свяжитесь с нами удобным способом
-              <br />
-              для уточнения наличия мест.
-            </p>
-
-            <div className="mt-6 space-y-3">
-              <motion.a
-                href={`https://t.me/${telegramUsername}`}
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full sm:w-[280px] inline-flex items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
-              >
-                <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
-                Написать в Telegram
-              </motion.a>
-
-              <motion.a
-                href={`https://wa.me/${phoneDigits}`}
-                target="_blank"
-                rel="noreferrer"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full sm:w-[280px] inline-flex items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
-              >
-                <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
-                Написать в WhatsApp
-              </motion.a>
+            <div className="font-semibold text-[16px]">Общая информация</div>
+            <div className="mt-5 space-y-3 text-slate-300/85 text-[14px]">
+              <Link className="block hover:text-white transition-colors" href="/rules">
+                Правила проживания
+              </Link>
+              <Link className="block hover:text-white transition-colors" href="/promotions">
+                Акции
+              </Link>
+              <Link className="block hover:text-white transition-colors" href="/reviews">
+                Отзывы
+              </Link>
             </div>
           </motion.div>
         </div>

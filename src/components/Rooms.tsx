@@ -12,12 +12,12 @@ export default function Rooms() {
     1: "/image/123/novobrachnie/05d62c2b27d4bff70b9cf1e26e32f994.jpg",
     2: "/image/55/egoist/photo_5235967796057936580_y.jpg",
     3: "/image/123/blaj/photo_5235967796057936467_y.jpg",
-    4: "/image/123/blaj2/photo_5235967796057936475_y.jpg",
-    5: "/image/123/blaj3/photo_5235967796057936483_y.jpg",
+    4: "/image/123/blaj3/photo_5235967796057936483_y.jpg",
+    5: "/image/123/blaj3/photo_5235967796057936479_y (1).jpg",
     6: "/image/123/blaj4/photo_5235967796057936514_y.jpg",
-    7: "/image/55/blaj5/photo_5235967796057936451_y.jpg",
+    7: "/image/55/blaj5/photo_5235967796057936454_y.jpg",
     8: "/image/55/sem_schastie/photo_5235967796057936603_y.jpg",
-    9: "/image/55/sem_prostori/photo_5235967796057936628_y.jpg",
+    9: "/image/55/sem_prostori/photo_5235967796057936642_y.jpg",
   };
 
   const roomGalleryById: Record<number, string[]> = {
@@ -39,15 +39,12 @@ export default function Rooms() {
       "/image/123/blaj/photo_5235967796057936471_y.jpg",
     ],
     4: [
-      "/image/123/blaj2/photo_5235967796057936475_y.jpg",
       "/image/123/blaj2/photo_5235967796057936476_y.jpg",
-      "/image/123/blaj2/photo_5235967796057936479_y.jpg",
-      "/image/123/blaj2/photo_5235967796057936481_y.jpg",
+      "/image/123/blaj3/photo_5235967796057936483_y.jpg",
+      "/image/123/blaj3/photo_5235967796057936495_y.jpg",
     ],
     5: [
-      "/image/123/blaj3/photo_5235967796057936483_y.jpg",
       "/image/123/blaj3/photo_5235967796057936489_y.jpg",
-      "/image/123/blaj3/photo_5235967796057936495_y.jpg",
       "/image/123/blaj3/photo_5235967796057936479_y (1).jpg",
       "/image/123/blaj3/photo_5235967796057936481_y (1).jpg",
     ],
@@ -59,11 +56,9 @@ export default function Rooms() {
       "/image/123/blaj4/photo_5235967796057936526_y.jpg",
     ],
     7: [
+      "/image/55/blaj5/photo_5235967796057936454_y.jpg",
       "/image/55/blaj5/photo_5235967796057936451_y.jpg",
       "/image/55/blaj5/photo_5235967796057936453_y.jpg",
-      "/image/55/blaj5/photo_5235967796057936454_y.jpg",
-      "/image/55/blaj5/photo_5235967796057936884_y.jpg",
-      "/image/55/blaj5/photo_5235967796057936885_y.jpg",
     ],
     8: [
       "/image/55/sem_schastie/photo_5235967796057936603_y.jpg",
@@ -78,7 +73,6 @@ export default function Rooms() {
       "/image/55/sem_prostori/photo_5235967796057936642_y.jpg",
       "/image/55/sem_prostori/photo_5235967796057936646_y.jpg",
       "/image/55/sem_prostori/photo_5235967796057936650_y.jpg",
-      "/image/55/sem_prostori/photo_5235967796057936657_y.jpg",
       "/image/55/sem_prostori/photo_5235967796057936659_y.jpg",
     ],
   };
@@ -87,69 +81,81 @@ export default function Rooms() {
     {
       id: 1,
       title: "Номер для новобрачных",
-      description: "Романтическая обстановка для двоих. Расположен на 1 этаже.",
+      description: "В номере создана романтическая обстановка для двоих, имеется все необхожимое для комфортного проживания, включая свой санузел.",
       capacityLabel: "2 местный",
-      tags: ["1 этаж", "Подходит для ОВЗ"],
+      tags: ["1 этаж", "Подходит для ОВЗ"], 
     },
     {
       id: 2,
-      title: "Эгоист",
-      description: "Уютный номер на 1 этаже с собственным входом. Идеален для комфортного проживания.",
+      title: "Номер-студия 'Эгоист'",
+      description: "Уютный номер на 1 этаже с собственным входом и кухней. В номере есть все необходимое для комфортного проживания.",
       capacityLabel: "3 местный",
       tags: ["1 этаж", "Подходит для ОВЗ", "Отдельный вход", "Своя кухня"],
     },
     {
       id: 3,
-      title: "Блаженство 1",
-      description: "Светлый и уютный номер для небольшой компании или семьи.",
+      title: "Блаженство 2",
+      description: "Светлый и уютный номер со всем необходимым для комфортного проживания для небольшой компании или семьи.",
       capacityLabel: "3 местный",
       tags: ["2 этаж"],
     },
     {
       id: 4,
-      title: "Блаженство 2",
-      description: "Светлый и уютный номер для небольшой компании или семьи.",
+      title: "Блаженство 3",
+      description: "Светлый и уютный номер со всем необходимым для комфортного проживания с прекрасным балконом для посиделок для небольшой компании или семьи.",
       capacityLabel: "3 местный",
       tags: ["3 этаж", "Балкон"],
     },
     {
       id: 5,
-      title: "Блаженство 3",
-      description: "Светлый и уютный номер для небольшой компании или семьи.",
+      title: "Блаженство 4",
+      description: "Светлый и уютный номер со всем необходимым для комфортного проживания с прекрасным балконом для посиделок для небольшой компании или семьи.",
       capacityLabel: "3 местный",
       tags: ["4 этаж", "Балкон"],
     },
     {
       id: 6,
-      title: "Блаженство 4",
-      description: "Светлый и уютный номер для небольшой компании или семьи.",
+      title: "Блаженство 5",
+      description: "Светлый и уютный номер со всем необходимым для комфортного проживания с прекрасным балконом для посиделок для небольшой компании или семьи.",
       capacityLabel: "3 местный",
       tags: ["5 этаж", "Балкон"],
     },
     {
       id: 7,
-      title: "Блаженство 5",
-      description: "Светлый и уютный номер для небольшой компании или семьи.",
+      title: "Блаженство 22",
+      description: "Светлый и уютный номер со всем необходимым для комфортного проживания для небольшой компании или семьи.",
       capacityLabel: "3 местный",
       tags: ["2 этаж"],
     },
     {
       id: 8,
       title: "Семейное блаженство",
-      description: "Комфортный номер для семьи с прекрасным балконом для вечерних посиделок.",
+      description: "Большой, светлый, комфортабельный номер со всеми условиями для прекрасного отдыха для небольшой компании или семьи.",
       capacityLabel: "4 местный",
       tags: ["3 этаж"],
     },
     {
       id: 9,
       title: "Семейные просторы",
-      description: "Отличный выбор для большой семьи или компании друзей. Максимум пространства.",
+      description: "Просторный, светлый и  комфортабельный номер со всеми условиями для прекрасного отдыха для небольшой компании или семьи.",
       capacityLabel: "5 местный",
       tags: ["4 этаж"],
     },
   ];
 
   const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+
+  const roomAreaById: Record<number, number> = {
+    1: 15,
+    2: 20,
+    3: 22,
+    4: 22,
+    5: 22,
+    6: 22,
+    7: 18,
+    8: 22,
+    9: 24,
+  };
 
   const selectedRoom = useMemo(() => {
     if (selectedRoomId === null) return null;
@@ -160,13 +166,14 @@ export default function Rooms() {
       description: room.description,
       capacityLabel: room.capacityLabel,
       tags: room.tags,
+      areaM2: roomAreaById[room.id],
       images: roomGalleryById[room.id] ?? [roomImageById[room.id]],
     };
   }, [selectedRoomId, rooms]);
 
   return (
-    <section id="rooms" className="bg-white">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-12 sm:py-14 md:py-16">
+    <section id="rooms" className="bg-[#E0F2F1]/30">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 md:pb-12">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -175,9 +182,9 @@ export default function Rooms() {
           transition={{ duration: 0.6 }}
           className="mb-8 sm:mb-10"
         >
-          <div className="flex items-start gap-3">
-            <Image src="/image/main/nashi.png" alt="" width={24} height={24} className="shrink-0 mt-0.5" />
-            <h2 className="font-bold text-slate-900 leading-tight text-[20px] sm:text-[22px] whitespace-nowrap">
+          <div className="flex items-center justify-center gap-3">
+            <Image src="/image/main/nashi.png" alt="" width={24} height={24} className="shrink-0" />
+            <h2 className="font-bold text-slate-900 leading-tight text-[20px] sm:text-[22px] whitespace-nowrap text-center">
               Наши номера
             </h2>
           </div>

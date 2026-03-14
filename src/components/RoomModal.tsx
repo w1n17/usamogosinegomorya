@@ -11,6 +11,7 @@ type RoomModalRoom = {
   capacityLabel: string;
   tags?: string[];
   images: string[];
+  areaM2?: number;
 };
 
 type RoomModalProps = {
@@ -98,7 +99,7 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: 8 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="relative w-full max-w-[1100px] bg-white rounded-[16px] overflow-hidden"
+              className="relative w-full max-w-[1100px] bg-[#E0F2F1] rounded-[16px] overflow-hidden"
               role="dialog"
               aria-modal="true"
               aria-label={room.title}
@@ -189,8 +190,8 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                         ))}
                       </div>
 
-                      <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-linear-to-r from-white to-white/0" />
-                      <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-linear-to-l from-white to-white/0" />
+                      <div className="pointer-events-none absolute left-0 top-0 h-full w-10 bg-linear-to-r from-[#E0F2F1]/80 to-[#E0F2F1]/0" />
+                      <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-linear-to-l from-[#E0F2F1]/80 to-[#E0F2F1]/0" />
 
                       {images.length >= 6 ? (
                         <>
@@ -199,7 +200,7 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                             onClick={() =>
                               thumbsRef.current?.scrollBy({ left: -240, behavior: "smooth" })
                             }
-                            className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 border border-slate-200 shadow-sm flex items-center justify-center"
+                            className="absolute left-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#E0F2F1]/80 border border-slate-200 shadow-sm flex items-center justify-center"
                             aria-label="Прокрутить фото влево"
                           >
                             <svg
@@ -224,7 +225,7 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                             onClick={() =>
                               thumbsRef.current?.scrollBy({ left: 240, behavior: "smooth" })
                             }
-                            className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/90 border border-slate-200 shadow-sm flex items-center justify-center"
+                            className="absolute right-0 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-[#E0F2F1]/80 border border-slate-200 shadow-sm flex items-center justify-center"
                             aria-label="Прокрутить фото вправо"
                           >
                             <svg
@@ -255,10 +256,16 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                       {room.title}
                     </h3>
 
+                    {typeof room.areaM2 === "number" ? (
+                      <div className="mt-2 text-slate-700 text-[14px]">
+                        Площадь: <span className="font-semibold">{room.areaM2} м²</span>
+                      </div>
+                    ) : null}
+
                     {room.tags && room.tags.length > 0 ? (
                       <div className="mt-3 flex flex-wrap gap-2">
                         {room.tags.map((t) => (
-                          <RoomTagPill key={t} tag={t} />
+                          <RoomTagPill key={t} tag={t} size="lg" />
                         ))}
                       </div>
                     ) : null}

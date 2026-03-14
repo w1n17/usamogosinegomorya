@@ -1,24 +1,57 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "framer-motion";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 // Hero секция с приветствием и кнопкой бронирования
 export default function Hero() {
+  const heroImages = [
+    "/image/main/main.jpg",
+    "/image/main/main1.jpg",
+    "/image/main/main2.jpg",
+    "/image/main/main3.jpg",
+  ] as const;
+
+  const [activeIdx, setActiveIdx] = useState(0);
+  const activeSrc = heroImages[activeIdx % heroImages.length];
+
+  useEffect(() => {
+    const id = window.setInterval(() => {
+      setActiveIdx((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+
+    return () => {
+      window.clearInterval(id);
+    };
+  }, [heroImages.length]);
+
   return (
     <section
       id="hero"
       className="relative isolate min-h-screen pt-16 md:pt-20"
     >
-      <div className="absolute inset-0 z-0">
-        <Image
-          src="/image/main/main.jpg"
-          alt="Море"
-          fill
-          priority
-          className="object-cover"
-        />
-        <div className="absolute inset-0 bg-linear-to-b from-black/30 to-black/60" />
+      <div className="absolute inset-0 z-0 bg-[#005B96]">
+        <AnimatePresence mode="sync">
+          <motion.div
+            key={activeSrc}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={activeSrc}
+              alt="Море"
+              fill
+              priority={activeIdx === 0}
+              className="object-cover"
+              sizes="100vw"
+            />
+          </motion.div>
+        </AnimatePresence>
       </div>
 
       <div className="relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -38,7 +71,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.35 }}
-            className="mt-4 sm:mt-5 text-white/90 text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] max-w-2xl mx-auto"
+            className="mt-4 sm:mt-5 text-white/95 text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] max-w-2xl mx-auto [text-shadow:0_4px_16px_rgba(0,0,0,0.95)]"
           >
             Мини гостиница в поселке Лазаревское на 9 номеров
             <br />
@@ -67,3 +100,4 @@ export default function Hero() {
     </section>
   );
 }
+

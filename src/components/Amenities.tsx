@@ -49,7 +49,7 @@ export default function Amenities() {
   ];
 
   return (
-    <section id="amenities" className="bg-white mb-10 sm:mb-14 md:mb-16">
+    <section id="amenities" className="bg-[#E0F2F1]/30 mb-6 sm:mb-8 md:mb-10">
       <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-12 sm:py-14 md:py-16 xl:h-[520px] xl:py-0 flex flex-col justify-center">
         {/* Заголовок секции */}
         <motion.div
@@ -68,7 +68,7 @@ export default function Amenities() {
         </motion.div>
 
         {/* Сетка удобств */}
-        <div className="mt-10 sm:mt-12 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-10 gap-x-6 place-items-center">
+        <div className="mt-8 sm:mt-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-y-10 gap-x-6 place-items-center">
           {amenities.map((amenity, index) => (
             <motion.div
               key={amenity.title}
@@ -80,10 +80,10 @@ export default function Amenities() {
               transition={{ duration: 0.4, delay: index * 0.04, ease: "easeOut" }}
               className="flex flex-col items-center text-center"
             >
-              <div className="w-14 h-14 rounded-full bg-[#EAF2F9] text-[#005B96] flex items-center justify-center">
-                <Image src={amenity.iconSrc} alt={amenity.title} width={24} height={24} />
+              <div className="w-16 h-16 rounded-full bg-[#EAF2F9] text-[#005B96] flex items-center justify-center">
+                <Image src={amenity.iconSrc} alt={amenity.title} width={28} height={28} />
               </div>
-              <div className="mt-3 text-[12px] leading-tight text-slate-500 whitespace-pre-line">
+              <div className="mt-3 text-[14px] leading-tight text-slate-500 whitespace-pre-line">
                 {amenity.title}
               </div>
             </motion.div>
