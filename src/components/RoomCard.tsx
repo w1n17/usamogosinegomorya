@@ -35,7 +35,7 @@ export default function RoomCard({
       whileHover={{ y: -4, boxShadow: "0 18px 48px rgba(15, 23, 42, 0.10)" }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 320, damping: 26 }}
-      className="w-full max-w-[352px] h-[442px] bg-[#E0F2F1]/30 rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col cursor-pointer"
+      className="w-full h-[442px] bg-[#E0F2F1]/30 rounded-2xl shadow-sm border border-slate-100 overflow-hidden flex flex-col cursor-pointer"
       onClick={onClick}
       role={onClick ? "button" : undefined}
       tabIndex={onClick ? 0 : undefined}

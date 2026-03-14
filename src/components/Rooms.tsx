@@ -173,7 +173,7 @@ export default function Rooms() {
 
   return (
     <section id="rooms" className="bg-[#E0F2F1]/30">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 md:pb-12">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 md:pb-12">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -201,7 +201,7 @@ export default function Rooms() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.5, delay: index * 0.06 }}
-                className="flex justify-center"
+                className="w-full"
               >
                 <RoomCard
                   title={room.title}

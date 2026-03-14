@@ -9,7 +9,7 @@ export default function PromotionsPage() {
         <div className="mx-auto w-full max-w-[960px] px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-slate-900 font-bold text-[28px] sm:text-[32px]">Акции</h1>
           <div className="mt-6 text-slate-600 text-[14px] sm:text-[16px] leading-relaxed">
-            Информация будет добавлена.
+            Проживание больше 15 дней предоставляется скидка.
           </div>
         </div>
       </main>

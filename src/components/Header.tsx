@@ -34,23 +34,25 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 md:h-20">
           {/* Логотип */}
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="flex items-center gap-3 font-bold text-[#0047AB] whitespace-nowrap text-[18px] xl:text-[20px] max-w-[70vw] truncate"
-          >
-            <Image src="/image/main/logo.png" alt="" width={28} height={28} className="shrink-0" />
-            <span className="truncate">У самого синего моря</span>
-          </motion.div>
+          <Link href="/" className="flex items-center">
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+              className="relative flex items-center h-20 font-bold text-[#0047AB] whitespace-nowrap text-[18px] xl:text-[20px] max-w-[70vw] truncate cursor-pointer hover:opacity-80 transition-opacity"
+            >
+              <Image src="/image/main/logotip.png" alt="" width={160} height={160} className="absolute left-0 top-1/2 -translate-y-1/2 object-contain" />
+              <span className="relative z-10 ml-[140px] truncate">У самого синего моря</span>
+            </motion.div>
+          </Link>
 
-          <div className="hidden xl:flex items-center ml-auto gap-[30px]">
+          <div className="hidden xl:flex items-center ml-auto gap-4 2xl:gap-[30px]">
             {/* Десктопная навигация */}
             <motion.ul
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
-              className="flex items-center whitespace-nowrap gap-6"
+              className="flex items-center whitespace-nowrap gap-3 2xl:gap-5"
             >
               {navItems.map((item) => (
                 <motion.li
@@ -73,20 +75,20 @@ export default function Header() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="shrink-0 flex items-center gap-7"
+              className="shrink-0 flex items-center gap-4 2xl:gap-7"
             >
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToFooter}
-                className="px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[16px]"
+                className="px-3 2xl:px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[13px] 2xl:text-[16px]"
               >
                 Забронировать
               </motion.button>
 
               <a
                 href={`tel:+${phoneDigits}`}
-                className="text-gray-700 hover:text-[#0047AB] transition-colors font-semibold whitespace-nowrap text-[16px]"
+                className="text-gray-700 hover:text-[#0047AB] transition-colors font-semibold whitespace-nowrap text-[13px] 2xl:text-[16px]"
               >
                 {phoneDisplay}
               </a>

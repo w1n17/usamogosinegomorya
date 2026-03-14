@@ -34,7 +34,7 @@ export default function RootLayout({
           className="fixed right-4 bottom-4 z-60 w-14 h-14 rounded-full bg-white shadow-none flex items-center justify-center hover:scale-[1.03] active:scale-[0.98] transition-transform"
           aria-label="Написать в Telegram"
         >
-          <Image src="/image/main/tg.png" alt="" width={48} height={48} priority />
+          <Image src="/image/main/tg.png" alt="" width={36} height={36} priority />
         </a>
       </body>
     </html>

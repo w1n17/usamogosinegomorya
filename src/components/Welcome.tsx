@@ -6,8 +6,8 @@ import { motion } from "framer-motion";
 // Секция "Добро пожаловать" с описанием гостиницы
 export default function Welcome() {
   return (
-    <section id="welcome" className="bg-[#F7F3EB]">
-      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8 py-10 sm:py-12 xl:h-[580px] xl:py-0 flex items-center justify-center">
+    <section id="welcome" className="bg-[#E0F2F1]/30">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 xl:h-[580px] xl:py-0 flex items-center justify-center">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

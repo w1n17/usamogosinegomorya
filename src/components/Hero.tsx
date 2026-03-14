@@ -54,9 +54,10 @@ export default function Hero() {
         </AnimatePresence>
       </div>
 
-      <div className="relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-5xl text-center">
-          <motion.h1
+      <div className="relative z-10 min-h-[calc(100vh-4rem)] md:min-h-[calc(100vh-5rem)] flex items-center">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="w-full text-center">
+            <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
@@ -95,6 +96,7 @@ export default function Hero() {
               Выбрать номер
             </motion.a>
           </motion.div>
+          </div>
         </div>
       </div>
     </section>

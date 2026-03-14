@@ -16,26 +16,25 @@ export default function Footer() {
 
   return (
     <footer id="footer" className="bg-[#0F172A] text-white">
-      <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 items-start">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-14">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 md:items-start">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.55 }}
-            className="md:col-span-1"
+            className="md:col-span-1 md:justify-self-start"
           >
-            <div className="flex items-start gap-3">
-              <Image src="/image/main/logo.png" alt="" width={24} height={24} className="shrink-0 mt-1" />
-              <div>
+            <div className="relative flex items-center h-[160px]">
+              <Image src="/image/main/logotip.png" alt="" width={160} height={160} className="absolute -left-[60px] top-1/2 -translate-y-1/2 object-contain" />
+              <div className="relative z-10 ml-[80px]">
                 <div className="font-bold leading-tight text-[18px] sm:text-[20px] whitespace-nowrap">
                   У самого синего моря
                 </div>
               </div>
             </div>
 
-
-            <div className="mt-6 relative w-full h-[230px] rounded-xl overflow-hidden border border-white/10 bg-[#E0F2F1]/10">
+            <div className="mt-6 relative w-[300px] h-[300px] rounded-xl overflow-hidden border border-white/10 bg-[#E0F2F1]/10">
               <iframe
                 src={yandexMapWidgetUrl}
                 title="Яндекс Карты"
@@ -77,7 +76,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.55, delay: 0.05 }}
-            className="md:col-span-1"
+            className="md:col-span-1 md:justify-self-center"
           >
             <div className="font-semibold text-[16px]">Контакты</div>
             <div className="mt-5 space-y-5 text-slate-300/85 text-[14px]">
@@ -104,14 +103,14 @@ export default function Footer() {
                 для уточнения наличия мест.
               </p>
 
-              <div className="mt-6 space-y-3">
+              <div className="mt-6 flex flex-col gap-3">
                 <motion.a
                   href={`https://t.me/${telegramUsername}`}
                   target="_blank"
                   rel="noreferrer"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
+                  className="w-full sm:w-[280px] inline-flex items-center justify-center gap-2 rounded-lg bg-[#0EA5E9] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
                 >
                   <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
                   Написать в Telegram
@@ -123,7 +122,7 @@ export default function Footer() {
                   rel="noreferrer"
                   whileHover={{ scale: 1.01 }}
                   whileTap={{ scale: 0.99 }}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
+                  className="w-full sm:w-[280px] inline-flex items-center justify-center gap-2 rounded-lg bg-[#22C55E] text-white px-4 py-3 text-[14px] font-medium whitespace-nowrap"
                 >
                   <Image src="/image/main/mes.png" alt="" width={18} height={18} className="shrink-0" />
                   Написать в WhatsApp
@@ -137,7 +136,7 @@ export default function Footer() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.55, delay: 0.08 }}
-            className="md:col-span-1 md:justify-self-end md:text-right"
+            className="md:col-span-1 md:justify-self-end"
           >
             <div className="font-semibold text-[16px]">Общая информация</div>
             <div className="mt-5 space-y-3 text-slate-300/85 text-[14px]">
