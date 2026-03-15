@@ -41,7 +41,7 @@ export default function Header() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="relative flex items-center h-20 font-bold text-[#0047AB] whitespace-nowrap text-[18px] xl:text-[20px] max-w-[70vw] truncate cursor-pointer hover:opacity-80 transition-opacity"
             >
-              <Image src="/image/main/logotip.png" alt="" width={160} height={160} className="absolute left-0 top-1/2 -translate-y-1/2 object-contain" />
+              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute left-10 top-1/2 -translate-y-1/2 object-contain" />
               <span className="relative z-10 ml-[140px] truncate">У самого синего моря</span>
             </motion.div>
           </Link>

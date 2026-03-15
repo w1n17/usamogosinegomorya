@@ -26,7 +26,7 @@ export default function Footer() {
             className="md:col-span-1 md:justify-self-start"
           >
             <div className="relative flex items-center h-[160px]">
-              <Image src="/image/main/logotip.png" alt="" width={160} height={160} className="absolute -left-[60px] top-1/2 -translate-y-1/2 object-contain" />
+              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute -left-[20px] top-1/2 -translate-y-1/2 object-contain" />
               <div className="relative z-10 ml-[80px]">
                 <div className="font-bold leading-tight text-[18px] sm:text-[20px] whitespace-nowrap">
                   У самого синего моря
