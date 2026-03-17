@@ -31,7 +31,7 @@ export default function Header() {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 bg-[#E0F2F1]/70 backdrop-blur-sm shadow-sm"
     >
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center h-16 md:h-20">
           {/* Логотип */}
           <Link href="/" className="flex items-center">
@@ -41,8 +41,8 @@ export default function Header() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="relative flex items-center h-20 font-bold text-[#0047AB] whitespace-nowrap text-[18px] xl:text-[20px] max-w-[70vw] truncate cursor-pointer hover:opacity-80 transition-opacity"
             >
-              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute left-10 top-1/2 -translate-y-1/2 object-contain" />
-              <span className="relative z-10 ml-[140px] truncate">У самого синего моря</span>
+              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute left-[10px] top-1/2 -translate-y-1/2 object-contain" />
+              <div className="relative z-10 ml-[110px] truncate">У самого синего моря</div>
             </motion.div>
           </Link>
 
@@ -81,7 +81,7 @@ export default function Header() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={scrollToFooter}
-                className="px-3 2xl:px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[13px] 2xl:text-[16px]"
+                className="px-3 2xl:px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[13px] 2xl:text-[16px] no-underline"
               >
                 Забронировать
               </motion.button>
@@ -139,7 +139,7 @@ export default function Header() {
                       setIsMenuOpen(false);
                       scrollToFooter();
                     }}
-                    className="w-full px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[16px]"
+                    className="w-full px-5 py-2.5 bg-[#0047AB] text-white rounded-lg font-medium hover:bg-[#003a8c] transition-colors whitespace-nowrap text-[16px] no-underline"
                   >
                     Забронировать
                   </button>

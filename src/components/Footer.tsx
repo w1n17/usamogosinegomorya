@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer id="footer" className="bg-[#0F172A] text-white">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 md:items-start">
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1fr_360px] gap-10 md:gap-8 md:items-start">
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -26,15 +26,15 @@ export default function Footer() {
             className="md:col-span-1 md:justify-self-start"
           >
             <div className="relative flex items-center h-[160px]">
-              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute -left-[20px] top-1/2 -translate-y-1/2 object-contain" />
-              <div className="relative z-10 ml-[80px]">
+              <Image src="/image/main/logotip.png" alt="" width={80} height={80} className="absolute left-[10px] top-1/2 -translate-y-1/2 object-contain" />
+              <div className="relative z-10 ml-[110px]">
                 <div className="font-bold leading-tight text-[18px] sm:text-[20px] whitespace-nowrap">
                   У самого синего моря
                 </div>
               </div>
             </div>
 
-            <div className="mt-6 relative w-[300px] h-[300px] rounded-xl overflow-hidden border border-white/10 bg-[#E0F2F1]/10">
+            <div className="mt-6 relative w-[338px] h-[294px] rounded-xl overflow-hidden border border-white/10 bg-[#E0F2F1]/10">
               <iframe
                 src={yandexMapWidgetUrl}
                 title="Яндекс Карты"

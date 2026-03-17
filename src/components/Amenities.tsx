@@ -50,7 +50,7 @@ export default function Amenities() {
 
   return (
     <section id="amenities" className="bg-[#E0F2F1]/30 mb-6 sm:mb-8 md:mb-10">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-14 md:py-16 xl:h-[520px] xl:py-0 flex flex-col justify-center">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 sm:py-7 md:py-8 xl:h-[520px] xl:py-0 flex flex-col justify-center">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

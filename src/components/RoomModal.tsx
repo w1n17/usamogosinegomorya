@@ -285,7 +285,7 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                       whileTap={{ scale: 0.99 }}
                       className="inline-flex items-center justify-center w-full h-[48px] rounded-[10px] bg-[#0047AB] text-white font-semibold text-[14px] whitespace-nowrap"
                     >
-                      Забронировать этот номер
+                      Узнать цену
                     </motion.a>
                   </div>
                 </div>

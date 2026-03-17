@@ -3,6 +3,8 @@ import Hero from "@/components/Hero";
 import Welcome from "@/components/Welcome";
 import Rooms from "@/components/Rooms";
 import Amenities from "@/components/Amenities";
+import ApartmentRentalSection from "@/components/ApartmentRentalSection";
+import WaterActivitiesSection from "@/components/WaterActivitiesSection";
 import Footer from "@/components/Footer";
 
 // Главная страница мини-гостиницы
@@ -15,6 +17,8 @@ export default function Home() {
         <Welcome />
         <Rooms />
         <Amenities />
+        <ApartmentRentalSection />
+        <WaterActivitiesSection />
       </main>
       <Footer />
     </div>

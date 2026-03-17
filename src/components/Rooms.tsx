@@ -147,14 +147,14 @@ export default function Rooms() {
 
   const roomAreaById: Record<number, number> = {
     1: 15,
-    2: 20,
+    2: 22,
     3: 22,
     4: 22,
     5: 22,
     6: 22,
     7: 18,
-    8: 22,
-    9: 24,
+    8: 26,
+    9: 26,
   };
 
   const selectedRoom = useMemo(() => {
@@ -173,7 +173,7 @@ export default function Rooms() {
 
   return (
     <section id="rooms" className="bg-[#E0F2F1]/30">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-12 sm:pt-14 md:pt-16 pb-8 sm:pb-10 md:pb-12">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 sm:pt-7 md:pt-8 pb-4 sm:pb-5 md:pb-6">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

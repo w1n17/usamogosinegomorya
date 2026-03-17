@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 export default function Welcome() {
   return (
     <section id="welcome" className="bg-[#E0F2F1]/30">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 xl:h-[580px] xl:py-0 flex items-center justify-center">
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-5 sm:py-6 xl:h-[580px] xl:py-0 flex items-center justify-center">
         {/* Заголовок секции */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
@@ -35,8 +35,8 @@ export default function Welcome() {
             кофе и ярким отдыхом, а об остальном позвольте нам позаботиться.
           </p>
 
-          <p className="mt-8 text-[#6B7280] text-[14px] sm:text-[15px] xl:text-[16px]">
-            С теплотой и заботой у вас!
+          <p className="mt-8 text-[#6B7280] text-[16px] sm:text-[15px] xl:text-[16px] text-center">
+            С теплотой и заботой о вас!
           </p>
         </motion.div>
       </div>
