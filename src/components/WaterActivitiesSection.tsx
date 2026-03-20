@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 function WavesIcon({ className }: { className?: string }) {
   return (
@@ -61,6 +62,46 @@ function ClockIcon({ className }: { className?: string }) {
 }
 
 export default function WaterActivitiesSection() {
+  const rentImages = [
+    "/image/water/rent/istockphoto-483979182-612x612.jpg",
+    "/image/water/rent/1ae974b1-44f5-423d-8881-1c6c09789968.jpg",
+    "/image/water/rent/fb192044-58a5-42d4-909c-a1cf82e81c1a.jpg",
+  ] as const;
+
+  const couchImages = [
+    "/image/water/couch/08446dd7-d67a-4cba-ad2b-ab1634a9dca0.jpg",
+    "/image/water/couch/635f855c-d96e-4d15-8054-d929fdd591c5.jpg",
+    "/image/water/couch/5d272f13-6527-482f-a494-dbf9d77046f4.jpg",
+  ] as const;
+
+  const [activeRentIdx, setActiveRentIdx] = useState(0);
+  const [activeCouchIdx, setActiveCouchIdx] = useState(0);
+
+  const activeRentSrc = rentImages[activeRentIdx % rentImages.length];
+  const activeCouchSrc = couchImages[activeCouchIdx % couchImages.length];
+
+  useEffect(() => {
+    if (rentImages.length <= 1) return;
+    const id = window.setInterval(() => {
+      setActiveRentIdx((prev) => (prev + 1) % rentImages.length);
+    }, 5000);
+
+    return () => {
+      window.clearInterval(id);
+    };
+  }, [rentImages.length]);
+
+  useEffect(() => {
+    if (couchImages.length <= 1) return;
+    const id = window.setInterval(() => {
+      setActiveCouchIdx((prev) => (prev + 1) % couchImages.length);
+    }, 5000);
+
+    return () => {
+      window.clearInterval(id);
+    };
+  }, [couchImages.length]);
+
   return (
     <section id="water-activities" className="bg-[#E0F2F1]/30">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-14">
@@ -88,13 +129,24 @@ export default function WaterActivitiesSection() {
             className="rounded-2xl bg-[#E0F2F1]/30 border border-slate-100 shadow-sm overflow-hidden"
           >
             <div className="relative w-full h-[220px] sm:h-[260px] bg-slate-50">
-              <Image
-                src="/image/water/istockphoto-483979182-612x612.jpg"
-                alt="Аренда SUP-бордов"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 520px, 100vw"
-              />
+              <AnimatePresence mode="sync">
+                <motion.div
+                  key={activeRentSrc}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={activeRentSrc}
+                    alt="Аренда SUP-бордов"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 520px, 100vw"
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <div className="p-7 sm:p-8">
@@ -130,13 +182,24 @@ export default function WaterActivitiesSection() {
             className="rounded-2xl bg-[#E0F2F1]/30 border border-slate-100 shadow-sm overflow-hidden"
           >
             <div className="relative w-full h-[220px] sm:h-[260px] bg-slate-50">
-              <Image
-                src="/image/water/sup-offer-pages---general-hero-.jpg"
-                alt="Уроки управления SUP-бордом"
-                fill
-                className="object-cover"
-                sizes="(min-width: 1024px) 520px, 100vw"
-              />
+              <AnimatePresence mode="sync">
+                <motion.div
+                  key={activeCouchSrc}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: "easeOut" }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={activeCouchSrc}
+                    alt="Уроки управления SUP-бордом"
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 520px, 100vw"
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             <div className="p-7 sm:p-8">
