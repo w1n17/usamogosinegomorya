@@ -5,6 +5,8 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 
+import ApartmentCalendarModal from "@/components/ApartmentCalendarModal";
+
 function ShieldIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -104,6 +106,7 @@ export default function ApartmentRentalSection() {
   ] as const;
 
   const [activeIdx, setActiveIdx] = useState(0);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const activeSrc = apartmentImages[activeIdx % apartmentImages.length];
 
   const goPrev = () => {
@@ -246,9 +249,18 @@ export default function ApartmentRentalSection() {
 
             <p className="mt-5 text-slate-600 text-[15px] sm:text-[16px] leading-relaxed max-w-xl">
               Для тех, кто предпочитает полное уединение и домашний уют, мы предлагаем в аренду современную и
-              светлую квартиру неподалеку. Это идеальный вариант для длительного проживания, где вы будете
-              чувствовать себя как дома.
+              светлую квартиру с комфортной обстановкой в шаговой доступности от моря. Это идеальный вариант
+              для прекрасного проживания, где вы будете чувствовать себя лучше чем дома т.к. пляж всегда рядом.
             </p>
+
+            <a
+              href="https://yandex.com/maps/-/CPR54TNG"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-4 inline-flex w-fit text-[14px] font-semibold text-[#0047AB] hover:text-[#003a8c] transition-colors"
+            >
+              Открыть на карте
+            </a>
 
             <div className="mt-7 space-y-3">
               {items.map((item) => {
@@ -264,17 +276,20 @@ export default function ApartmentRentalSection() {
               })}
             </div>
 
-            <motion.a
-              href="#footer"
+            <motion.button
+              type="button"
+              onClick={() => setIsCalendarOpen(true)}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               className="mt-8 inline-flex items-center justify-center bg-[#0047AB] text-white font-semibold rounded-[8px] px-6 h-[48px] text-[14px] whitespace-nowrap hover:bg-[#003a8c] transition-colors"
             >
               Узнать подробности
-            </motion.a>
+            </motion.button>
           </motion.div>
         </div>
       </div>
+
+      <ApartmentCalendarModal open={isCalendarOpen} onClose={() => setIsCalendarOpen(false)} />
     </section>
   );
 }

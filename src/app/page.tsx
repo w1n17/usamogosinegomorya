@@ -4,7 +4,6 @@ import Welcome from "@/components/Welcome";
 import Rooms from "@/components/Rooms";
 import Amenities from "@/components/Amenities";
 import ApartmentRentalSection from "@/components/ApartmentRentalSection";
-import ApartmentAvailabilityCalendar from "@/components/ApartmentAvailabilityCalendar";
 import WaterActivitiesSection from "@/components/WaterActivitiesSection";
 import Footer from "@/components/Footer";
 
@@ -19,7 +18,6 @@ export default function Home() {
         <Rooms />
         <Amenities />
         <ApartmentRentalSection />
-        <ApartmentAvailabilityCalendar />
         <WaterActivitiesSection />
       </main>
       <Footer />

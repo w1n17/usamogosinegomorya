@@ -35,7 +35,7 @@ export default function Welcome() {
             кофе и ярким отдыхом, а об остальном позвольте нам позаботиться.
           </p>
 
-          <p className="mt-8 text-[#6B7280] text-[16px] sm:text-[15px] xl:text-[16px] text-center">
+          <p className="mt-8 text-[#6B7280] text-[18px] sm:text-[18px] xl:text-[20px] text-center font-semibold">
             С теплотой и заботой о вас!
           </p>
         </motion.div>

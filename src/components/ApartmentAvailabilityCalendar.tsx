@@ -1,10 +1,14 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { type ElementType, useEffect, useMemo, useState } from "react";
 
 type CalendarResponse = {
   busyDays: string[];
+};
+
+type ApartmentAvailabilityCalendarProps = {
+  embedded?: boolean;
 };
 
 function isoDayFromDate(d: Date): string {
@@ -30,7 +34,7 @@ function mondayIndex(jsDay: number): number {
   return (jsDay + 6) % 7;
 }
 
-export default function ApartmentAvailabilityCalendar() {
+export default function ApartmentAvailabilityCalendar({ embedded = false }: ApartmentAvailabilityCalendarProps) {
   const [month, setMonth] = useState(() => startOfMonth(new Date()));
   const [busyDays, setBusyDays] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -86,7 +90,7 @@ export default function ApartmentAvailabilityCalendar() {
       cells.push({ date: dt, iso: isoDayFromDate(dt) });
     }
 
-    while (cells.length % 7 !== 0) {
+    while (cells.length < 42) {
       cells.push({ date: null, iso: null });
     }
 
@@ -95,9 +99,18 @@ export default function ApartmentAvailabilityCalendar() {
 
   const todayIso = useMemo(() => isoDayFromDate(new Date()), []);
 
+  const Wrapper: ElementType = embedded ? "div" : "section";
+  const wrapperProps = embedded ? {} : { id: "apartment-calendar" };
+
   return (
-    <section id="apartment-calendar" className="bg-[#E0F2F1]/30">
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-14">
+    <Wrapper {...wrapperProps} className={embedded ? "" : "bg-[#E0F2F1]/30"}>
+      <div
+        className={
+          embedded
+            ? "mx-auto w-full max-w-7xl px-4 sm:px-6 py-6 sm:py-7"
+            : "mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-10 sm:py-12 md:py-14"
+        }
+      >
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -195,6 +208,6 @@ export default function ApartmentAvailabilityCalendar() {
           </div>
         </div>
       </div>
-    </section>
+    </Wrapper>
   );
 }

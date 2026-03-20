@@ -72,8 +72,12 @@ export default function Hero() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.35 }}
-              className="mt-4 sm:mt-5 text-white/95 text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] max-w-2xl mx-auto [text-shadow:0_10px_24px_rgba(0,0,0,0.85),0_2px_8px_rgba(0,0,0,0.75)]"
+              className="relative mt-4 sm:mt-5 text-white text-[14px] sm:text-[16px] lg:text-[18px] xl:text-[20px] max-w-2xl mx-auto [text-shadow:0_14px_32px_rgba(0,0,0,0.95),0_4px_12px_rgba(0,0,0,0.9)]"
             >
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-x-14 -inset-y-10 -z-10 rounded-full bg-black/70 blur-3xl opacity-70"
+              />
               Мини гостиница в поселке Лазаревское на 9 номеров
               <br />
               в 30 метрах от пляжа

@@ -63,7 +63,6 @@ function ClockIcon({ className }: { className?: string }) {
 
 export default function WaterActivitiesSection() {
   const rentImages = [
-    "/image/water/rent/istockphoto-483979182-612x612.jpg",
     "/image/water/rent/1ae974b1-44f5-423d-8881-1c6c09789968.jpg",
     "/image/water/rent/fb192044-58a5-42d4-909c-a1cf82e81c1a.jpg",
   ] as const;
@@ -152,8 +151,8 @@ export default function WaterActivitiesSection() {
             <div className="p-7 sm:p-8">
               <h3 className="font-bold text-slate-900 text-[20px]">Аренда SUP-бордов</h3>
               <p className="mt-3 text-slate-600 text-[14px] leading-relaxed max-w-lg">
-                Откройте для себя морские прогулки на SUP-бордах. Наслаждайтесь утренним штилем или закатом
-                прямо на воде. Мы находимся всего в 30 метрах от берега, что делает прокат максимально удобным.
+                Откройте для себя прогулки на SUP-бордах по морской стихии, наслаждаясь утренним штилем или
+                закатом прямо на морской глади...
               </p>
 
               <div className="mt-6 flex items-center gap-3 text-slate-700 text-[14px]">
@@ -203,7 +202,7 @@ export default function WaterActivitiesSection() {
             </div>
 
             <div className="p-7 sm:p-8">
-              <h3 className="font-bold text-slate-900 text-[20px]">Уроки управления</h3>
+              <h3 className="font-bold text-slate-900 text-[20px]">Уроки управления SUP-бордом</h3>
               <p className="mt-3 text-slate-600 text-[14px] leading-relaxed max-w-lg">
                 Освойте искусство скольжения по воде под руководством опытного инструктора. Мы научим вас
                 правильно стоять на доске, держать баланс и эффективно грести. Подходит для любого уровня
