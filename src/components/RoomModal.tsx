@@ -279,14 +279,19 @@ export default function RoomModal({ open, room, onClose }: RoomModalProps) {
                   </div>
 
                   <div className="mt-auto pt-8">
-                    <motion.a
-                      href="#"
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        // Небольшая задержка, чтобы первая модалка успела закрыться
+                        setTimeout(() => {
+                          window.dispatchEvent(new CustomEvent('open-calendar'));
+                        }, 100);
+                      }}
                       className="inline-flex items-center justify-center w-full h-[48px] rounded-[10px] bg-[#0047AB] text-white font-semibold text-[14px] whitespace-nowrap"
                     >
                       Узнать цену
-                    </motion.a>
+                    </button>
                   </div>
                 </div>
               </div>

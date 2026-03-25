@@ -19,6 +19,7 @@ type RoomCardProps = {
   capacityLabel: string;
   tags?: string[];
   imageSrc: string;
+  price?: number | null;
   onClick?: () => void;
 };
 
@@ -28,6 +29,7 @@ export default function RoomCard({
   capacityLabel,
   tags = [],
   imageSrc,
+  price,
   onClick,
 }: RoomCardProps) {
   return (
@@ -66,10 +68,18 @@ export default function RoomCard({
       </div>
 
       <div className="px-5 pt-4 pb-5 flex-1 flex flex-col">
-        <div className="flex-none">
+        <div className="flex items-start justify-between gap-2">
           <h3 className="font-bold text-slate-900 text-[18px] xl:text-[20px] leading-snug overflow-hidden [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] min-h-[44px]">
             {title}
           </h3>
+          {price !== undefined && (
+            <div className="flex flex-col items-end shrink-0">
+              <div className="text-[16px] font-bold text-[#0047AB]">
+                {price ? `${price}₽` : "—"}
+              </div>
+              <div className="text-[10px] text-slate-400 font-medium uppercase tracking-wider">сутки</div>
+            </div>
+          )}
         </div>
 
         <div className="mt-0 flex-none h-[66px] overflow-hidden">

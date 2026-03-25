@@ -4,7 +4,10 @@ import { motion } from "framer-motion";
 import { type ElementType, useEffect, useMemo, useState } from "react";
 
 type CalendarResponse = {
-  busyDays: string[];
+  rooms: Array<{
+    id: string;
+    bookings: Array<{ from: string; to: string }>;
+  }>;
 };
 
 type ApartmentAvailabilityCalendarProps = {
@@ -48,10 +51,27 @@ export default function ApartmentAvailabilityCalendar({ embedded = false }: Apar
       setError(null);
 
       try {
-        const res = await fetch("/api/tvil-calendar", { cache: "no-store" });
+        const res = await fetch("/api/admin/calendar", { cache: "no-store" });
         if (!res.ok) throw new Error("failed");
         const data = (await res.json()) as CalendarResponse;
-        if (!cancelled) setBusyDays(data.busyDays ?? []);
+        
+        // Извлекаем все занятые дни для апартаментов (или всех номеров, если нужно объединить)
+        // Для ApartmentAvailabilityCalendar берем именно 'apartment'
+        const apartmentRoom = data.rooms?.find(r => r.id === 'apartment');
+        const days: string[] = [];
+        
+        if (apartmentRoom?.bookings) {
+          apartmentRoom.bookings.forEach(b => {
+            let curr = new Date(b.from);
+            const end = new Date(b.to);
+            while (curr < end) {
+              days.push(curr.toISOString().split('T')[0]);
+              curr.setDate(curr.getDate() + 1);
+            }
+          });
+        }
+        
+        if (!cancelled) setBusyDays(days);
       } catch {
         if (!cancelled) setError("Не удалось загрузить календарь занятости");
       } finally {

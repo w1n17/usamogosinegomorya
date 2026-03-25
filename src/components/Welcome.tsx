@@ -36,7 +36,7 @@ export default function Welcome() {
           </p>
 
           <p className="mt-8 text-[#6B7280] text-[18px] sm:text-[18px] xl:text-[20px] text-center font-semibold">
-            С теплотой и заботой о вас!
+            С теплотой и заботой о Вас!
           </p>
         </motion.div>
       </div>

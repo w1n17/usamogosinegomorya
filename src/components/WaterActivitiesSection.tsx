@@ -159,7 +159,7 @@ export default function WaterActivitiesSection() {
                 <span className="w-8 h-8 rounded-full bg-[#EAF2F9] text-[#0047AB] flex items-center justify-center shrink-0">
                   <WavesIcon className="w-4 h-4" />
                 </span>
-                <span>Всего 30 метров до воды</span>
+                <span>Всего 30 метров до пляжа</span>
               </div>
 
               <motion.a

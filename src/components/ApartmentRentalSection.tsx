@@ -3,7 +3,7 @@
 import Image from "next/image";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import ApartmentCalendarModal from "@/components/ApartmentCalendarModal";
 
@@ -108,6 +108,12 @@ export default function ApartmentRentalSection() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const activeSrc = apartmentImages[activeIdx % apartmentImages.length];
+
+  useEffect(() => {
+    const handleOpen = () => setIsCalendarOpen(true);
+    window.addEventListener('open-calendar', handleOpen);
+    return () => window.removeEventListener('open-calendar', handleOpen);
+  }, []);
 
   const goPrev = () => {
     setActiveIdx((prev) => (prev - 1 + apartmentImages.length) % apartmentImages.length);
