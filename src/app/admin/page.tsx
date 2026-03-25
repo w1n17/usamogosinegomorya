@@ -443,17 +443,17 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
             <div
               ref={scrollContainerRef}
-              className="overflow-x-auto overscroll-contain"
+              className="overflow-auto overscroll-contain max-h-[70vh]"
               onMouseMove={handleMouseMove}
             >
               <table className="inline-table min-w-max border-collapse table-fixed">
-                <thead>
+                <thead className="sticky top-0 z-10">
                   <tr>
                     <th className="sticky left-0 z-20 w-64 bg-slate-50 border-b border-r border-slate-200 p-4 text-left text-sm font-bold text-slate-700">
                       Номер / Дата
                     </th>
                     {dates.map((date) => (
-                      <th key={date.getTime()} className="w-24 bg-slate-50 border-b border-r border-slate-200 p-2 text-center">
+                      <th key={date.getTime()} className="w-24 bg-slate-50 border-b border-r border-slate-200 p-2 text-center sticky top-0">
                         <div className="text-[10px] uppercase text-slate-400 font-bold tracking-wider">
                           {date.toLocaleDateString("ru-RU", { weekday: "short" })}
                         </div>

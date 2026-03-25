@@ -143,16 +143,16 @@ export default function PublicBookingGrid() {
 
       <div
         ref={scrollRef}
-        className="overflow-x-auto rounded-2xl overscroll-contain"
+        className="overflow-auto rounded-2xl overscroll-contain max-h-[70vh]"
       >
         <table className="inline-table min-w-max border-collapse table-fixed">
-          <thead>
+          <thead className="sticky top-0 z-10">
             <tr>
               <th className="sticky left-0 z-20 w-56 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
                 Номер
               </th>
               {dates.map((date) => (
-                <th key={date.getTime()} className="w-20 bg-white/50 border-b border-r border-white/60 p-2 text-center">
+                <th key={date.getTime()} className="w-20 bg-white/50 border-b border-r border-white/60 p-2 text-center sticky top-0">
                   <div className="text-[10px] text-slate-400 font-bold uppercase">{date.toLocaleDateString("ru-RU", { weekday: "short" })}</div>
                   <div className="text-xs font-bold text-slate-600">{date.getDate()} {date.toLocaleDateString("ru-RU", { month: "short" }).replace('.', '')}</div>
                 </th>
