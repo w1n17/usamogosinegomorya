@@ -86,11 +86,12 @@ export default function PublicBookingGrid() {
   // Генерируем массив дат для колонок (от сегодня до конца года + 30 дней запас)
   const dates = (() => {
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const endOfYear = new Date(now.getFullYear(), 11, 31);
-    const daysUntilEnd = Math.ceil((endOfYear.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) + 30;
+    const daysUntilEnd = Math.ceil((endOfYear.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)) + 30;
     const count = Math.max(60, daysUntilEnd);
     return Array.from({ length: count }, (_, i) => {
-      const d = new Date(startDate);
+      const d = new Date(today);
       d.setDate(d.getDate() + i);
       return d;
     });
