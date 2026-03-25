@@ -29,8 +29,6 @@ type DayModalProps = {
 export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: DayModalProps) {
   const [price, setPrice] = useState<number>(0);
   const [isBooking, setIsBooking] = useState(false);
-  const [guestName, setGuestName] = useState("");
-  const [status, setStatus] = useState<"paid" | "pending" | "canceled">("pending");
 
   useEffect(() => {
     if (room && dates.length > 0) {
@@ -42,13 +40,9 @@ export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: D
         const b = room.bookings.find(b => dates[0] >= b.from && dates[0] < b.to);
         if (b) {
           setIsBooking(true);
-          setGuestName(b.guest);
-          setStatus(b.status);
         }
       } else {
         setIsBooking(false);
-        setGuestName("");
-        setStatus("pending");
       }
     }
   }, [room, dates, isOpen]);
@@ -75,8 +69,8 @@ export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: D
       newBooking = {
         from,
         to,
-        guest: guestName,
-        status: status
+        guest: "",
+        status: "pending"
       };
     }
 
@@ -162,38 +156,6 @@ export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: D
                   </button>
                 </div>
 
-                {isBooking && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    className="space-y-4 overflow-hidden"
-                  >
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Имя гостя</label>
-                      <input
-                        type="text"
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0047AB]/20 outline-none text-sm"
-                        placeholder="Введите имя..."
-                        required={isBooking}
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Статус</label>
-                      <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value as any)}
-                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0047AB]/20 outline-none text-sm appearance-none"
-                      >
-                        <option value="pending">Ожидание</option>
-                        <option value="paid">Оплачено</option>
-                        <option value="canceled">Отмена</option>
-                      </select>
-                    </div>
-                  </motion.div>
-                )}
               </div>
 
               <div className="pt-4 flex gap-3">
