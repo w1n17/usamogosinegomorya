@@ -52,20 +52,20 @@ export default function ApartmentCalendarModal({ open, onClose }: ApartmentCalen
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.98, y: 8 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="relative w-full max-w-[1000px] bg-white rounded-[24px] shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative w-full max-w-[1100px] bg-[#E0F2F1] rounded-[16px] shadow-xl border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]"
               role="dialog"
               aria-modal="true"
               aria-label="Календарь цен и наличия мест"
             >
-              <div className="p-4 sm:p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <div className="p-4 sm:p-6 border-b border-white/60 flex items-center justify-between bg-white/40 backdrop-blur-sm">
                 <div>
                   <h3 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">Цены и наличие мест</h3>
-                  <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">Выберите подходящий номер и даты проживания</p>
+                  <p className="text-xs sm:text-sm text-slate-600 font-medium mt-0.5">Выберите подходящий номер и даты проживания</p>
                 </div>
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="w-10 h-10 rounded-full bg-slate-200/50 hover:bg-slate-200 flex items-center justify-center transition-colors text-slate-600"
+                  className="w-10 h-10 rounded-full bg-white/70 hover:bg-white border border-white/60 shadow-sm flex items-center justify-center transition-colors text-slate-700"
                   aria-label="Закрыть"
                 >
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -75,9 +75,13 @@ export default function ApartmentCalendarModal({ open, onClose }: ApartmentCalen
               </div>
 
               <div className="p-4 sm:p-6 overflow-y-auto grow">
-                <PublicBookingGrid />
+                <div className="rounded-2xl bg-white/70 backdrop-blur-md border border-white/60 shadow-sm">
+                  <div className="p-3 sm:p-4">
+                    <PublicBookingGrid />
+                  </div>
+                </div>
                 
-                <div className="mt-8 p-4 bg-[#E0F2F1]/50 rounded-2xl border border-[#0047AB]/10">
+                <div className="mt-8 p-4 bg-white/60 backdrop-blur-md rounded-2xl border border-white/60">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div className="text-center sm:text-left text-sm text-slate-600">
                       <p className="font-bold text-slate-900">Понравился вариант?</p>

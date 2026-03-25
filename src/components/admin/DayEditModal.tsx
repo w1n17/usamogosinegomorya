@@ -21,38 +21,37 @@ type RoomData = {
 type DayModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  dateStr: string;
+  dates: string[];
   room: RoomData | null;
-  onSave: (dateStr: string, roomId: string, price: number, booking?: Booking | null) => void;
+  onSave: (dates: string[], roomId: string, price: number, booking?: Booking | null) => void;
 };
 
-export default function DayEditModal({ isOpen, onClose, dateStr, room, onSave }: DayModalProps) {
+export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: DayModalProps) {
   const [price, setPrice] = useState<number>(0);
   const [isBooking, setIsBooking] = useState(false);
   const [guestName, setGuestName] = useState("");
-  const [stayDays, setStayDays] = useState(1);
   const [status, setStatus] = useState<"paid" | "pending" | "canceled">("pending");
 
   useEffect(() => {
-    if (room && dateStr) {
-      setPrice(room.prices[dateStr] || 0);
-      const existingBooking = room.bookings.find(b => dateStr >= b.from && dateStr < b.to);
-      if (existingBooking) {
-        setIsBooking(true);
-        setGuestName(existingBooking.guest);
-        setStatus(existingBooking.status);
-        // Вычисляем длительность для отображения (упрощенно)
-        const start = new Date(existingBooking.from);
-        const end = new Date(existingBooking.to);
-        setStayDays(Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
+    if (room && dates.length > 0) {
+      // Берем цену первого дня для инициализации
+      setPrice(room.prices[dates[0]] || 0);
+      
+      const isRangeBooked = dates.some(d => room.bookings.some(b => d >= b.from && d < b.to));
+      if (isRangeBooked && dates.length === 1) {
+        const b = room.bookings.find(b => dates[0] >= b.from && dates[0] < b.to);
+        if (b) {
+          setIsBooking(true);
+          setGuestName(b.guest);
+          setStatus(b.status);
+        }
       } else {
         setIsBooking(false);
         setGuestName("");
-        setStayDays(1);
         setStatus("pending");
       }
     }
-  }, [room, dateStr, isOpen]);
+  }, [room, dates, isOpen]);
 
   if (!room) return null;
 
@@ -61,24 +60,34 @@ export default function DayEditModal({ isOpen, onClose, dateStr, room, onSave }:
     let newBooking: Booking | null = null;
     
     if (isBooking) {
-      const endDate = new Date(dateStr);
-      endDate.setDate(endDate.getDate() + stayDays);
+      // Если это бронь, создаем один диапазон от минимальной до максимальной даты + 1 день
+      const sortedDates = [...dates].sort();
+      const from = sortedDates[0];
+      const last = new Date(sortedDates[sortedDates.length - 1]);
+      last.setDate(last.getDate() + 1);
+      const to = last.toISOString().split('T')[0];
+
       newBooking = {
-        from: dateStr,
-        to: endDate.toISOString().split('T')[0],
+        from,
+        to,
         guest: guestName,
         status: status
       };
     }
 
-    onSave(dateStr, room.id, price, newBooking);
+    onSave(dates, room.id, price, newBooking);
     onClose();
   };
 
   const handleDeleteBooking = () => {
-    onSave(dateStr, room.id, price, null);
+    onSave(dates, room.id, price, null);
     onClose();
   };
+
+  const isSingleDay = dates.length === 1;
+  const displayDate = isSingleDay 
+    ? new Date(dates[0]).toLocaleDateString("ru-RU", { day: 'numeric', month: 'long' })
+    : `${dates.length} дн. (${new Date(Math.min(...dates.map(d => new Date(d).getTime()))).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })} - ${new Date(Math.max(...dates.map(d => new Date(d).getTime()))).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })})`;
 
   return (
     <AnimatePresence>
@@ -101,7 +110,7 @@ export default function DayEditModal({ isOpen, onClose, dateStr, room, onSave }:
               <div>
                 <h3 className="text-lg font-bold text-slate-900">{room.name}</h3>
                 <p className="text-sm text-slate-500 font-medium">
-                  {new Date(dateStr).toLocaleDateString("ru-RU", { day: 'numeric', month: 'long', year: 'numeric' })}
+                  {displayDate}
                 </p>
               </div>
               <button onClick={onClose} className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400">
@@ -160,36 +169,24 @@ export default function DayEditModal({ isOpen, onClose, dateStr, room, onSave }:
                       />
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Ночей</label>
-                        <input
-                          type="number"
-                          min="1"
-                          value={stayDays}
-                          onChange={(e) => setStayDays(Number(e.target.value))}
-                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0047AB]/20 outline-none text-sm"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Статус</label>
-                        <select
-                          value={status}
-                          onChange={(e) => setStatus(e.target.value as any)}
-                          className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0047AB]/20 outline-none text-sm appearance-none"
-                        >
-                          <option value="pending">Ожидание</option>
-                          <option value="paid">Оплачено</option>
-                          <option value="canceled">Отмена</option>
-                        </select>
-                      </div>
+                    <div className="space-y-2">
+                      <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">Статус</label>
+                      <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value as any)}
+                        className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-[#0047AB]/20 outline-none text-sm appearance-none"
+                      >
+                        <option value="pending">Ожидание</option>
+                        <option value="paid">Оплачено</option>
+                        <option value="canceled">Отмена</option>
+                      </select>
                     </div>
                   </motion.div>
                 )}
               </div>
 
               <div className="pt-4 flex gap-3">
-                {room.bookings.some(b => dateStr >= b.from && dateStr < b.to) && (
+                {dates.some(d => room.bookings.some(b => d >= b.from && d < b.to)) && (
                   <button
                     type="button"
                     onClick={handleDeleteBooking}

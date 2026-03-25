@@ -40,8 +40,14 @@ export default function AdminDashboard() {
   
   // Состояние для модалки
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [selectedRoom, setSelectedRoom] = useState<RoomData | null>(null);
+
+  // Состояние для выделения (drag-to-select)
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragRoomId, setDragRoomId] = useState<string | null>(null);
+  const [dragStartIdx, setDragStartIdx] = useState<number | null>(null);
+  const [dragEndIdx, setDragEndIdx] = useState<number | null>(null);
 
   // Состояние для отображения дат
   const [startDate, setStartDate] = useState(() => {
@@ -137,13 +143,47 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleCellClick = (room: RoomData, dateStr: string) => {
-    setSelectedRoom(room);
-    setSelectedDate(dateStr);
-    setIsModalOpen(true);
+  const handleMouseDown = (roomId: string, dateIdx: number) => {
+    setIsDragging(true);
+    setDragRoomId(roomId);
+    setDragStartIdx(dateIdx);
+    setDragEndIdx(dateIdx);
   };
 
-  const handleUpdateCell = (dateStr: string, roomId: string, price: number, newBooking?: Booking | null) => {
+  const handleMouseEnter = (dateIdx: number) => {
+    if (isDragging) {
+      setDragEndIdx(dateIdx);
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging && dragRoomId && dragStartIdx !== null && dragEndIdx !== null) {
+      const room = data?.rooms.find(r => r.id === dragRoomId);
+      if (room) {
+        const start = Math.min(dragStartIdx, dragEndIdx);
+        const end = Math.max(dragStartIdx, dragEndIdx);
+        const selectedStrDates = dates.slice(start, end + 1).map(d => formatDate(d));
+        
+        setSelectedRoom(room);
+        setSelectedDates(selectedStrDates);
+        setIsModalOpen(true);
+      }
+    }
+    setIsDragging(false);
+    setDragRoomId(null);
+    setDragStartIdx(null);
+    setDragEndIdx(null);
+  };
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (isDragging) handleMouseUp();
+    };
+    window.addEventListener('mouseup', handleGlobalMouseUp);
+    return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
+  }, [isDragging, dragRoomId, dragStartIdx, dragEndIdx, data]);
+
+  const handleUpdateCell = (targetDates: string[], roomId: string, price: number, newBooking?: Booking | null) => {
     if (!data) return;
 
     const nextData = { ...data };
@@ -152,15 +192,17 @@ export default function AdminDashboard() {
 
     const room = { ...nextData.rooms[roomIndex] };
     
-    // Обновляем цену
-    room.prices = { ...room.prices, [dateStr]: price };
+    // Обновляем цены для всех дат
+    targetDates.forEach(d => {
+      room.prices = { ...room.prices, [d]: price };
+    });
 
     // Обновляем бронирование
     if (newBooking === null) {
-      // Удаляем бронь, которая попадает на эту дату
-      room.bookings = room.bookings.filter(b => !(dateStr >= b.from && dateStr < b.to));
+      // Удаляем брони, попадающие в диапазон
+      room.bookings = room.bookings.filter(b => !targetDates.some(d => d >= b.from && d < b.to));
     } else if (newBooking) {
-      // Добавляем новую бронь (сначала удаляем старые пересечения)
+      // Удаляем пересечения и добавляем новую бронь
       const filtered = room.bookings.filter(b => {
         const overlap = (newBooking.from < b.to && newBooking.to > b.from);
         return !overlap;
@@ -199,7 +241,7 @@ export default function AdminDashboard() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <h1 className="text-2xl font-bold text-slate-900">Управление бронированием</h1>
-              <p className="text-slate-500 text-sm mt-1">Настройте цены и отметьте занятые даты</p>
+              <p className="text-slate-500 text-sm mt-1">Выделяйте ячейки для массового изменения цен и броней</p>
             </div>
             
             <div className="flex items-center gap-3">
@@ -231,21 +273,15 @@ export default function AdminDashboard() {
               </button>
 
               <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block" />
-
-              <button
-                disabled={saving}
-                onClick={() => data && handleSave(data)}
-                className="bg-[#0047AB] text-white px-6 py-2.5 rounded-xl font-bold hover:bg-[#003a8c] transition-all shadow-lg shadow-blue-900/10 disabled:opacity-50 disabled:scale-100 flex items-center gap-2 active:scale-[0.98]"
-              >
-                {saving ? (
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                  </svg>
+              
+              <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+                {saving && (
+                  <>
+                    <div className="w-3 h-3 border-2 border-[#0047AB] border-t-transparent rounded-full animate-spin" />
+                    <span>Сохранение...</span>
+                  </>
                 )}
-                {saving ? "Сохранение..." : "Сохранить"}
-              </button>
+              </div>
             </div>
           </div>
 
@@ -297,18 +333,24 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       </td>
-                      {dates.map((date) => {
+                      {dates.map((date, dateIdx) => {
                         const dateStr = formatDate(date);
                         const price = room.prices[dateStr] || 0;
                         const isBooked = room.bookings.some(b => dateStr >= b.from && dateStr < b.to);
                         
+                        const isSelected = isDragging && 
+                          dragRoomId === room.id && 
+                          dateIdx >= Math.min(dragStartIdx!, dragEndIdx!) && 
+                          dateIdx <= Math.max(dragStartIdx!, dragEndIdx!);
+                        
                         return (
                           <td 
                             key={dateStr}
-                            className={`h-16 border-b border-r border-slate-200 p-1 text-center cursor-pointer hover:bg-blue-50/30 transition-colors ${
-                              isBooked ? "bg-amber-50/40" : ""
+                            onMouseDown={() => handleMouseDown(room.id, dateIdx)}
+                            onMouseEnter={() => handleMouseEnter(dateIdx)}
+                            className={`h-16 border-b border-r border-slate-200 p-1 text-center cursor-pointer select-none transition-colors ${
+                              isSelected ? "bg-[#0047AB]/20" : isBooked ? "bg-amber-50/40" : "hover:bg-blue-50/30"
                             }`}
-                            onClick={() => handleCellClick(room, dateStr)}
                           >
                             <div className="flex flex-col items-center justify-center h-full gap-0.5">
                               {isBooked ? (
@@ -337,22 +379,28 @@ export default function AdminDashboard() {
           <DayEditModal
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
-            dateStr={selectedDate}
+            dates={selectedDates}
             room={selectedRoom}
             onSave={handleUpdateCell}
           />
 
           <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-slate-500 bg-white/50 backdrop-blur-sm p-4 rounded-xl border border-slate-100">
+            <div className="flex items-center gap-2 font-medium text-slate-900">
+              <svg className="w-4 h-4 text-[#0047AB]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+              </svg>
+              <span>Как редактировать:</span>
+            </div>
             <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded bg-white border border-slate-200" />
-              <span>Свободно / Без цены</span>
+              <div className="w-3 h-3 rounded bg-[#0047AB]/20 border border-[#0047AB]/30" />
+              <span>Зажмите и тяните для выбора диапазона</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded bg-amber-100 border border-amber-200" />
               <span>Забронировано</span>
             </div>
             <div className="ml-auto italic">
-              * Кликните на ячейку для изменения цены или добавления брони
+              * Изменения сохраняются автоматически
             </div>
           </div>
         </div>

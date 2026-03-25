@@ -58,9 +58,9 @@ export default function PublicBookingGrid() {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-inner border border-slate-100 overflow-hidden">
-      <div className="flex items-center justify-between p-4 bg-slate-50 border-b border-slate-100">
-        <h4 className="text-sm font-bold text-slate-700 uppercase tracking-wider">Наличие мест и цены</h4>
+    <div className="bg-white/60 backdrop-blur-md rounded-2xl border border-white/60 overflow-hidden">
+      <div className="flex items-center justify-between p-4 bg-white/40 border-b border-white/60">
+        <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Наличие мест и цены</h4>
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
@@ -68,7 +68,7 @@ export default function PublicBookingGrid() {
               d.setDate(d.getDate() - 7);
               setStartDate(d);
             }}
-            className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 transition-colors"
+            className="p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -80,7 +80,7 @@ export default function PublicBookingGrid() {
               d.setDate(d.getDate() + 7);
               setStartDate(d);
             }}
-            className="p-1.5 rounded-lg hover:bg-slate-200 text-slate-500 transition-colors"
+            className="p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -89,15 +89,15 @@ export default function PublicBookingGrid() {
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse table-fixed min-w-[800px]">
+      <div className="overflow-x-auto rounded-2xl">
+        <table className="w-full border-collapse table-fixed min-w-[820px]">
           <thead>
             <tr>
-              <th className="sticky left-0 z-20 w-48 bg-white border-b border-r border-slate-100 p-3 text-left text-xs font-bold text-slate-500 uppercase">
+              <th className="sticky left-0 z-20 w-56 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
                 Номер
               </th>
               {dates.map((date) => (
-                <th key={date.getTime()} className="w-20 bg-slate-50/50 border-b border-r border-slate-100 p-2 text-center">
+                <th key={date.getTime()} className="w-20 bg-white/50 border-b border-r border-white/60 p-2 text-center">
                   <div className="text-[10px] text-slate-400 font-bold uppercase">{date.toLocaleDateString("ru-RU", { weekday: "short" })}</div>
                   <div className="text-xs font-bold text-slate-600">{date.getDate()} {date.toLocaleDateString("ru-RU", { month: "short" }).replace('.', '')}</div>
                 </th>
@@ -106,8 +106,8 @@ export default function PublicBookingGrid() {
           </thead>
           <tbody>
             {data?.rooms?.map((room) => (
-              <tr key={room.id} className="hover:bg-slate-50/30 transition-colors">
-                <td className="sticky left-0 z-10 bg-white border-b border-r border-slate-100 p-2">
+              <tr key={room.id} className="hover:bg-white/40 transition-colors">
+                <td className="sticky left-0 z-10 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-2">
                   <div className="flex items-center gap-2">
                     <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0 border border-slate-100">
                       {room.image && <Image src={room.image} alt="" fill className="object-cover text-[8px]" />}
@@ -123,7 +123,7 @@ export default function PublicBookingGrid() {
                   const isBooked = room.bookings?.some(b => dateStr >= b.from && dateStr < b.to) || false;
 
                   return (
-                    <td key={dateStr} className={`h-12 border-b border-r border-slate-100 p-1 text-center ${isBooked ? "bg-rose-50/30" : ""}`}>
+                    <td key={dateStr} className={`h-12 border-b border-r border-white/60 p-1 text-center ${isBooked ? "bg-rose-50/35" : ""}`}>
                       {isBooked ? (
                         <div className="text-[9px] font-bold text-rose-400 uppercase tracking-tighter">Занят</div>
                       ) : (
@@ -139,7 +139,7 @@ export default function PublicBookingGrid() {
           </tbody>
         </table>
       </div>
-      <div className="p-3 bg-slate-50/50 border-t border-slate-100 text-[10px] text-slate-400 italic text-center">
+      <div className="p-3 bg-white/40 border-t border-white/60 text-[10px] text-slate-500 italic text-center">
         * Выберите подходящие даты и свяжитесь с нами для бронирования
       </div>
     </div>
