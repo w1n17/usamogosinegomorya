@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 
@@ -26,6 +26,7 @@ type CalendarData = {
 export default function PublicBookingGrid() {
   const [data, setData] = useState<CalendarData | null>(null);
   const [loading, setLoading] = useState(true);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -89,7 +90,18 @@ export default function PublicBookingGrid() {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-2xl">
+      <div
+        ref={scrollRef}
+        className="overflow-x-auto rounded-2xl"
+        onWheel={(e) => {
+          const el = scrollRef.current;
+          if (!el) return;
+          const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+          if (dx === 0) return;
+          el.scrollLeft += dx;
+          e.preventDefault();
+        }}
+      >
         <table className="w-full border-collapse table-fixed min-w-[820px]">
           <thead>
             <tr>

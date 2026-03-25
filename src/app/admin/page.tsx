@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type MouseEvent, type WheelEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -37,6 +37,10 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
+  const lastPointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const autoScrollRafRef = useRef<number | null>(null);
   
   // Состояние для модалки
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -143,16 +147,43 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleMouseDown = (roomId: string, dateIdx: number) => {
+  const handleMouseDown = (roomId: string, dateIdx: number, e?: { clientX: number; clientY: number }) => {
     setIsDragging(true);
     setDragRoomId(roomId);
     setDragStartIdx(dateIdx);
     setDragEndIdx(dateIdx);
+
+    if (e) {
+      lastPointerRef.current = { x: e.clientX, y: e.clientY };
+    }
   };
 
   const handleMouseEnter = (dateIdx: number) => {
     if (isDragging) {
       setDragEndIdx(dateIdx);
+    }
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    lastPointerRef.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    // Тачпад обычно дает deltaX, колесо мыши — deltaY.
+    // Мы превращаем любой wheel в горизонтальный скролл, чтобы не нужно было нажимать кнопки.
+    const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+    if (dx === 0) return;
+
+    container.scrollLeft += dx;
+    e.preventDefault();
+
+    // Во время выделения не сбиваем drag-select: обновляем координаты
+    if (isDragging) {
+      lastPointerRef.current = { x: e.clientX, y: e.clientY };
     }
   };
 
@@ -182,6 +213,68 @@ export default function AdminDashboard() {
     window.addEventListener('mouseup', handleGlobalMouseUp);
     return () => window.removeEventListener('mouseup', handleGlobalMouseUp);
   }, [isDragging, dragRoomId, dragStartIdx, dragEndIdx, data]);
+
+  useEffect(() => {
+    if (!isDragging) {
+      if (autoScrollRafRef.current !== null) {
+        cancelAnimationFrame(autoScrollRafRef.current);
+        autoScrollRafRef.current = null;
+      }
+      return;
+    }
+
+    const tick = () => {
+      const container = scrollContainerRef.current;
+      if (!container) {
+        autoScrollRafRef.current = requestAnimationFrame(tick);
+        return;
+      }
+
+      const rect = container.getBoundingClientRect();
+      const { x, y } = lastPointerRef.current;
+
+      const edge = 60; // зона у края для автоскролла
+      const maxSpeed = 18; // px за кадр
+
+      let dx = 0;
+      if (x < rect.left + edge) {
+        const t = Math.max(0, (rect.left + edge - x) / edge);
+        dx = -Math.round(maxSpeed * t);
+      } else if (x > rect.right - edge) {
+        const t = Math.max(0, (x - (rect.right - edge)) / edge);
+        dx = Math.round(maxSpeed * t);
+      }
+
+      if (dx !== 0) {
+        container.scrollLeft += dx;
+      }
+
+      // Обновляем конечный индекс выделения по элементу под курсором,
+      // чтобы выделение продолжалось даже при автоскролле.
+      if (dragRoomId) {
+        const el = document.elementFromPoint(x, y) as HTMLElement | null;
+        const cell = el?.closest?.('td[data-date-idx][data-room-id]') as HTMLElement | null;
+        if (cell) {
+          const roomId = cell.getAttribute('data-room-id');
+          const idxRaw = cell.getAttribute('data-date-idx');
+          const idx = idxRaw ? Number(idxRaw) : NaN;
+          if (roomId === dragRoomId && Number.isFinite(idx)) {
+            setDragEndIdx(idx);
+          }
+        }
+      }
+
+      autoScrollRafRef.current = requestAnimationFrame(tick);
+    };
+
+    autoScrollRafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (autoScrollRafRef.current !== null) {
+        cancelAnimationFrame(autoScrollRafRef.current);
+        autoScrollRafRef.current = null;
+      }
+    };
+  }, [isDragging, dragRoomId]);
 
   const handleUpdateCell = (targetDates: string[], roomId: string, price: number, newBooking?: Booking | null) => {
     if (!data) return;
@@ -296,7 +389,12 @@ export default function AdminDashboard() {
 
           {/* Шахматка */}
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
-            <div className="overflow-x-auto">
+            <div
+              ref={scrollContainerRef}
+              className="overflow-x-auto"
+              onMouseMove={handleMouseMove}
+              onWheel={handleWheel}
+            >
               <table className="w-full border-collapse table-fixed min-w-[1200px]">
                 <thead>
                   <tr>
@@ -346,7 +444,9 @@ export default function AdminDashboard() {
                         return (
                           <td 
                             key={dateStr}
-                            onMouseDown={() => handleMouseDown(room.id, dateIdx)}
+                            data-room-id={room.id}
+                            data-date-idx={dateIdx}
+                            onMouseDown={(e) => handleMouseDown(room.id, dateIdx, e)}
                             onMouseEnter={() => handleMouseEnter(dateIdx)}
                             className={`h-16 border-b border-r border-slate-200 p-1 text-center cursor-pointer select-none transition-colors ${
                               isSelected ? "bg-[#0047AB]/20" : isBooked ? "bg-amber-50/40" : "hover:bg-blue-50/30"
