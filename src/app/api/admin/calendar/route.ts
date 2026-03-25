@@ -100,7 +100,11 @@ export async function GET() {
       }
     }
 
-    const response = await fetch(calendarBlob.url);
+    const blobFetchUrl = 'downloadUrl' in calendarBlob && calendarBlob.downloadUrl
+      ? calendarBlob.downloadUrl
+      : calendarBlob.url;
+
+    const response = await fetch(blobFetchUrl);
     const data = await response.json();
     
     return NextResponse.json(data);
@@ -138,7 +142,7 @@ export async function POST(request: Request) {
     // Используем access: 'public' для Put, так как это влияет только на URL, 
     // но сам Blob-контейнер может быть настроен как Private в Vercel.
     const { url } = await put(BLOB_FILENAME, JSON.stringify(data), {
-      access: 'public',
+      access: 'private',
       contentType: 'application/json',
       addRandomSuffix: false, // Чтобы имя файла было фиксированным
     });
