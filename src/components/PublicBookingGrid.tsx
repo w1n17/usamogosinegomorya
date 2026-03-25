@@ -47,25 +47,24 @@ export default function PublicBookingGrid() {
       const el = scrollRef.current;
       if (!el) return;
 
-      const path = (typeof e.composedPath === "function" ? e.composedPath() : []) as EventTarget[];
-      const isFromContainer = path.includes(el);
-      if (!isFromContainer) return;
+      const rect = el.getBoundingClientRect();
+      const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
+      const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
+      const isPointerInside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+      if (!isPointerInside) return;
 
       if (el.scrollWidth <= el.clientWidth) return;
 
-      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
       if (raw === 0) return;
 
-      const rect = el.getBoundingClientRect();
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
       const dx = raw * multiplier;
-      const prev = el.scrollLeft;
-      el.scrollLeft += dx;
+      const maxScrollLeft = el.scrollWidth - el.clientWidth;
+      el.scrollLeft = Math.max(0, Math.min(maxScrollLeft, el.scrollLeft + dx));
 
-      if (el.scrollLeft !== prev) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      e.preventDefault();
+      e.stopPropagation();
     };
 
     window.addEventListener("wheel", onWheel, { passive: false, capture: true });

@@ -184,32 +184,30 @@ export default function AdminDashboard() {
       const container = scrollContainerRef.current;
       if (!container) return;
 
-      const path = (typeof e.composedPath === "function" ? e.composedPath() : []) as EventTarget[];
-      const isFromContainer = path.includes(container);
+      const rect = container.getBoundingClientRect();
+      const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
+      const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
+      const isPointerInside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
 
-      if (!isDragging && !isFromContainer) return;
+      if (!isDragging && !isPointerInside) return;
 
       if (container.scrollWidth <= container.clientWidth) return;
 
-      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
       if (raw === 0) return;
 
       // deltaMode: 0=px, 1=line, 2=page
-      const rect = container.getBoundingClientRect();
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
       const dx = raw * multiplier;
 
-      const prev = container.scrollLeft;
-      container.scrollLeft += dx;
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const next = Math.max(0, Math.min(maxScrollLeft, container.scrollLeft + dx));
+      container.scrollLeft = next;
 
-      if (container.scrollLeft !== prev) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
+      e.preventDefault();
+      e.stopPropagation();
 
       if (isDragging && dragRoomId) {
-        const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
-        const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
         lastPointerRef.current = { x, y };
 
         // После горизонтальной прокрутки mouseenter не срабатывает, поэтому
