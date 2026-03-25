@@ -395,7 +395,7 @@ export default function AdminDashboard() {
               onMouseMove={handleMouseMove}
               onWheel={handleWheel}
             >
-              <table className="w-full border-collapse table-fixed min-w-[1200px]">
+              <table className="w-max border-collapse table-fixed">
                 <thead>
                   <tr>
                     <th className="sticky left-0 z-20 w-64 bg-slate-50 border-b border-r border-slate-200 p-4 text-left text-sm font-bold text-slate-700">

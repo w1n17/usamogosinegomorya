@@ -102,7 +102,7 @@ export default function PublicBookingGrid() {
           e.preventDefault();
         }}
       >
-        <table className="w-full border-collapse table-fixed min-w-[820px]">
+        <table className="w-max border-collapse table-fixed">
           <thead>
             <tr>
               <th className="sticky left-0 z-20 w-56 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
