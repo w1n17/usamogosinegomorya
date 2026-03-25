@@ -63,9 +63,14 @@ export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: D
       // Если это бронь, создаем один диапазон от минимальной до максимальной даты + 1 день
       const sortedDates = [...dates].sort();
       const from = sortedDates[0];
-      const last = new Date(sortedDates[sortedDates.length - 1]);
+      // Парсим дату как локальную (не UTC)
+      const [y, m, d] = sortedDates[sortedDates.length - 1].split('-').map(Number);
+      const last = new Date(y, m - 1, d);
       last.setDate(last.getDate() + 1);
-      const to = last.toISOString().split('T')[0];
+      const ly = last.getFullYear();
+      const lm = String(last.getMonth() + 1).padStart(2, '0');
+      const ld = String(last.getDate()).padStart(2, '0');
+      const to = `${ly}-${lm}-${ld}`;
 
       newBooking = {
         from,
@@ -84,10 +89,16 @@ export default function DayEditModal({ isOpen, onClose, dates, room, onSave }: D
     onClose();
   };
 
+  // Парсим дату как локальную (не UTC)
+  const parseLocalDate = (dateStr: string) => {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d);
+  };
+
   const isSingleDay = dates.length === 1;
   const displayDate = isSingleDay 
-    ? new Date(dates[0]).toLocaleDateString("ru-RU", { day: 'numeric', month: 'long' })
-    : `${dates.length} дн. (${new Date(Math.min(...dates.map(d => new Date(d).getTime()))).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })} - ${new Date(Math.max(...dates.map(d => new Date(d).getTime()))).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })})`;
+    ? parseLocalDate(dates[0]).toLocaleDateString("ru-RU", { day: 'numeric', month: 'long' })
+    : `${dates.length} дн. (${parseLocalDate(dates[0]).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })} - ${parseLocalDate(dates[dates.length - 1]).toLocaleDateString("ru-RU", { day: 'numeric', month: 'short' })})`;
 
   return (
     <AnimatePresence>

@@ -62,10 +62,16 @@ export default function ApartmentAvailabilityCalendar({ embedded = false }: Apar
         
         if (apartmentRoom?.bookings) {
           apartmentRoom.bookings.forEach(b => {
-            let curr = new Date(b.from);
-            const end = new Date(b.to);
+            // Парсим даты как локальные (не UTC)
+            const [fy, fm, fd] = b.from.split('-').map(Number);
+            const [ty, tm, td] = b.to.split('-').map(Number);
+            let curr = new Date(fy, fm - 1, fd);
+            const end = new Date(ty, tm - 1, td);
             while (curr < end) {
-              days.push(curr.toISOString().split('T')[0]);
+              const y = curr.getFullYear();
+              const m = String(curr.getMonth() + 1).padStart(2, '0');
+              const d = String(curr.getDate()).padStart(2, '0');
+              days.push(`${y}-${m}-${d}`);
               curr.setDate(curr.getDate() + 1);
             }
           });
