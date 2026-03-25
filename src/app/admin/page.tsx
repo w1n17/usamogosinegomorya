@@ -200,6 +200,14 @@ export default function AdminDashboard() {
       const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
       if (raw === 0) return;
 
+      // DEBUG: логируем для диагностики
+      console.log('[WHEEL]', { 
+        deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode,
+        scrollLeft: container.scrollLeft, 
+        maxScrollLeft: container.scrollWidth - container.clientWidth,
+        dx: raw * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1)
+      });
+
       // deltaMode: 0=px, 1=line, 2=page
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
       const dx = raw * multiplier;
@@ -209,7 +217,7 @@ export default function AdminDashboard() {
       container.scrollLeft = next;
 
       e.preventDefault();
-      e.stopPropagation();
+      e.stopImmediatePropagation();
 
       if (isDragging && dragRoomId) {
         lastPointerRef.current = { x, y };
