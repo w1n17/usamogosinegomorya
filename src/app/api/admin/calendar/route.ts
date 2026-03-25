@@ -1,4 +1,4 @@
-import { put, list } from '@vercel/blob';
+import { put, list, head } from '@vercel/blob';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'nodejs';
@@ -100,27 +100,25 @@ export async function GET() {
       }
     }
 
-    const downloadUrl = 'downloadUrl' in calendarBlob && calendarBlob.downloadUrl
-      ? calendarBlob.downloadUrl
-      : null;
-
-    const tryFetchJson = async (url: string, withAuth: boolean) => {
-      const headers = withAuth && process.env.BLOB_READ_WRITE_TOKEN
-        ? { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` }
-        : undefined;
-
-      const res = await fetch(url, { headers });
-      if (!res.ok) {
-        const text = await res.text().catch(() => '');
-        throw new Error(`Blob fetch failed (${res.status} ${res.statusText}) ${text}`);
-      }
-      return res.json();
-    };
-
-    // Для private-store URL может требовать Authorization, а downloadUrl (если есть) обычно доступен без него.
-    const data = downloadUrl
-      ? await tryFetchJson(downloadUrl, false)
-      : await tryFetchJson(calendarBlob.url, true);
+    // Для private blob используем head() для получения downloadUrl
+    const blobInfo = await head(calendarBlob.url);
+    const downloadUrl = blobInfo.downloadUrl || calendarBlob.url;
+    
+    // Делаем запрос с токеном авторизации для private blob
+    const headers: Record<string, string> = {};
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      headers['Authorization'] = `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}`;
+    }
+    
+    const response = await fetch(downloadUrl, { headers });
+    
+    if (!response.ok) {
+      const text = await response.text().catch(() => '');
+      console.error('[GET] Blob fetch failed:', response.status, response.statusText, text);
+      return NextResponse.json({ error: `Blob fetch failed: ${response.status}` }, { status: 500 });
+    }
+    
+    const data = await response.json();
     
     return NextResponse.json(data);
   } catch (error) {

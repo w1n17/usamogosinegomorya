@@ -18,17 +18,34 @@ export default function AdminLoginPage() {
     }
   }, [router]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     
-    // Временно сохраняем в sessionStorage для имитации сессии
-    // Проверка реального пароля будет происходить на уровне API при сохранении
-    if (password.length > 0) {
-      sessionStorage.setItem("admin_password", password);
-      sessionStorage.setItem("admin_auth", "true");
-      router.push("/admin");
-    } else {
+    if (!password.trim()) {
       setError("Введите пароль");
+      return;
+    }
+    
+    try {
+      // Проверяем пароль через API
+      const res = await fetch("/api/admin/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      
+      const data = await res.json();
+      
+      if (data.success) {
+        sessionStorage.setItem("admin_password", password);
+        sessionStorage.setItem("admin_auth", "true");
+        router.push("/admin");
+      } else {
+        setError(data.error || "Неверный пароль");
+      }
+    } catch {
+      setError("Ошибка соединения");
     }
   };
 
