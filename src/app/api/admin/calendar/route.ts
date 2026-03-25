@@ -152,12 +152,11 @@ export async function POST(request: Request) {
     console.log('[POST] Skip blob deletion (versioning is handled by Blob storage)');
 
     // Записываем новый файл
-    // Используем access: 'public' для Put, так как это влияет только на URL, 
-    // но сам Blob-контейнер может быть настроен как Private в Vercel.
     const { url } = await put(BLOB_FILENAME, JSON.stringify(data), {
       access: 'private',
       contentType: 'application/json',
-      addRandomSuffix: false, // Чтобы имя файла было фиксированным
+      addRandomSuffix: false,
+      allowOverwrite: true, // Разрешаем перезапись существующего файла
     });
 
     console.log('[POST] Successfully saved to blob:', url);
