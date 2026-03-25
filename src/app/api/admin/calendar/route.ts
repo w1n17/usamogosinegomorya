@@ -113,18 +113,24 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { password, data } = body;
 
+    console.log('[POST] Received request, hasPassword:', !!password, 'hasData:', !!data);
+
     // Простая проверка пароля через переменную окружения
     if (password !== process.env.ADMIN_PASSWORD) {
+      console.log('[POST] Unauthorized - password mismatch');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Удаляем старые версии файла перед записью нового (опционально для экономии места, 
-    // но Blob поддерживает версионность через разные URL)
-    const { blobs } = await list();
-    const oldBlobs = blobs.filter((b) => b.pathname === BLOB_FILENAME);
-    for (const b of oldBlobs) {
-      await del(b.url);
+    // Проверяем наличие токена Blob
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      console.error('[POST] Missing BLOB_READ_WRITE_TOKEN');
+      return NextResponse.json({ error: 'Server configuration error: missing blob token' }, { status: 500 });
     }
+
+    // Важно: не удаляем старые blob-версии.
+    // На проде удаление (del) может быть запрещено токеном/окружением и приводить к 500.
+    // put с фиксированным pathname создаёт новую версию и этого достаточно.
+    console.log('[POST] Skip blob deletion (versioning is handled by Blob storage)');
 
     // Записываем новый файл
     // Используем access: 'public' для Put, так как это влияет только на URL, 
@@ -135,9 +141,10 @@ export async function POST(request: Request) {
       addRandomSuffix: false, // Чтобы имя файла было фиксированным
     });
 
+    console.log('[POST] Successfully saved to blob:', url);
     return NextResponse.json({ success: true, url });
   } catch (error) {
-    console.error('Error updating calendar:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('[POST] Error updating calendar:', error);
+    return NextResponse.json({ error: 'Internal Server Error', details: String(error) }, { status: 500 });
   }
 }

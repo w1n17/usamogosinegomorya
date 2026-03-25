@@ -61,13 +61,12 @@ export default function AdminDashboard() {
 
   // Генерируем массив дат для колонок (от сегодня до конца года + 30 дней запас)
   const dates = (() => {
-    const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const endOfYear = new Date(now.getFullYear(), 11, 31); // 31 декабря
-    const daysUntilEnd = Math.ceil((endOfYear.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)) + 30;
+    const base = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+    const endOfYear = new Date(base.getFullYear(), 11, 31); // 31 декабря
+    const daysUntilEnd = Math.ceil((endOfYear.getTime() - base.getTime()) / (1000 * 60 * 60 * 24)) + 30;
     const count = Math.max(60, daysUntilEnd); // минимум 60 дней
     return Array.from({ length: count }, (_, i) => {
-      const d = new Date(today);
+      const d = new Date(base);
       d.setDate(d.getDate() + i);
       return d;
     });
@@ -414,7 +413,10 @@ export default function AdminDashboard() {
               </button>
               
               <button
-                onClick={() => setStartDate(new Date())}
+                onClick={() => {
+                  const d = new Date();
+                  setStartDate(new Date(d.getFullYear(), d.getMonth(), d.getDate()));
+                }}
                 className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors"
               >
                 Сегодня
