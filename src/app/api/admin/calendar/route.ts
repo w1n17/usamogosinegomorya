@@ -11,13 +11,91 @@ const BLOB_FILENAME = 'calendar-data.json';
 
 export async function GET() {
   try {
-    // Ищем файл в Blob
     const { blobs } = await list();
     const calendarBlob = blobs.find((b) => b.pathname === BLOB_FILENAME);
 
     if (!calendarBlob) {
-      // Если файла нет, возвращаем пустую структуру (позже инициализируем)
-      return NextResponse.json({ error: 'Not found' }, { status: 404 });
+      // Если файла нет в Blob, возвращаем данные из локального файла проекта
+      try {
+        const initialData = {
+          "rooms": [
+            {
+              "id": "room-1",
+              "name": "Номер для новобрачных",
+              "image": "/image/123/novobrachnie/05d62c2b27d4bff70b9cf1e26e32f994.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-2",
+              "name": "Студия 'Эгоист'",
+              "image": "/image/55/egoist/photo_5235967796057936580_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-3",
+              "name": "Блаженство 2",
+              "image": "/image/123/blaj/photo_5235967796057936467_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-4",
+              "name": "Блаженство 3",
+              "image": "/image/123/blaj3/photo_5235967796057936483_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-5",
+              "name": "Блаженство 4",
+              "image": "/image/123/blaj3/photo_5235967796057936479_y (1).jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-6",
+              "name": "Блаженство 5",
+              "image": "/image/123/blaj4/photo_5235967796057936514_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-7",
+              "name": "Блаженство 22",
+              "image": "/image/55/blaj5/photo_5235967796057936454_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-8",
+              "name": "Семейное блаженство",
+              "image": "/image/55/sem_schastie/photo_5235967796057936603_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "room-9",
+              "name": "Семейные просторы",
+              "image": "/image/55/sem_prostori/photo_5235967796057936642_y.jpg",
+              "prices": {},
+              "bookings": []
+            },
+            {
+              "id": "apartment",
+              "name": "Квартира",
+              "image": "/image/apartment/photo_5317054549518389867_y.jpg",
+              "prices": {},
+              "bookings": []
+            }
+          ],
+          "lastUpdated": new Date().toISOString()
+        };
+        return NextResponse.json(initialData);
+      } catch (e) {
+        return NextResponse.json({ error: 'Not found' }, { status: 404 });
+      }
     }
 
     const response = await fetch(calendarBlob.url);

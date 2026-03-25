@@ -105,12 +105,12 @@ export default function PublicBookingGrid() {
             </tr>
           </thead>
           <tbody>
-            {data?.rooms.map((room) => (
+            {data?.rooms?.map((room) => (
               <tr key={room.id} className="hover:bg-slate-50/30 transition-colors">
                 <td className="sticky left-0 z-10 bg-white border-b border-r border-slate-100 p-2">
                   <div className="flex items-center gap-2">
                     <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0 border border-slate-100">
-                      <Image src={room.image} alt="" fill className="object-cover text-[8px]" />
+                      {room.image && <Image src={room.image} alt="" fill className="object-cover text-[8px]" />}
                     </div>
                     <div className="text-[11px] font-bold text-slate-700 leading-tight truncate">
                       {room.name}
@@ -119,8 +119,8 @@ export default function PublicBookingGrid() {
                 </td>
                 {dates.map((date) => {
                   const dateStr = formatDate(date);
-                  const price = room.prices[dateStr] || 0;
-                  const isBooked = room.bookings.some(b => dateStr >= b.from && dateStr < b.to);
+                  const price = room.prices?.[dateStr] || 0;
+                  const isBooked = room.bookings?.some(b => dateStr >= b.from && dateStr < b.to) || false;
 
                   return (
                     <td key={dateStr} className={`h-12 border-b border-r border-slate-100 p-1 text-center ${isBooked ? "bg-rose-50/30" : ""}`}>

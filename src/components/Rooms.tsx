@@ -36,13 +36,13 @@ export default function Rooms() {
   }, []);
 
   const getPriceForRoom = (roomId: string) => {
-    if (!calendarData) return null;
+    if (!calendarData || !calendarData.rooms) return null;
     const room = calendarData.rooms.find((r) => r.id === roomId);
     if (!room) return null;
 
     // Ищем цену на сегодня
     const today = new Date().toISOString().split("T")[0];
-    return room.prices[today] || null;
+    return room.prices ? room.prices[today] : null;
   };
 
   const roomImageById: Record<number, string> = {
