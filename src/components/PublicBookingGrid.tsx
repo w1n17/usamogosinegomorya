@@ -76,11 +76,18 @@ export default function PublicBookingGrid() {
     return () => window.removeEventListener("wheel", onWheel, { capture: true } as any);
   }, []);
 
-  const dates = Array.from({ length: 14 }, (_, i) => {
-    const d = new Date(startDate);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
+  // Генерируем массив дат для колонок (от сегодня до конца года + 30 дней запас)
+  const dates = (() => {
+    const now = new Date();
+    const endOfYear = new Date(now.getFullYear(), 11, 31);
+    const daysUntilEnd = Math.ceil((endOfYear.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) + 30;
+    const count = Math.max(60, daysUntilEnd);
+    return Array.from({ length: count }, (_, i) => {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+  })();
 
   const formatDate = (d: Date) => d.toISOString().split("T")[0];
 

@@ -59,12 +59,18 @@ export default function AdminDashboard() {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   });
 
-  // Генерируем массив дат для колонок (35 дней вперед)
-  const dates = Array.from({ length: 35 }, (_, i) => {
-    const d = new Date(startDate);
-    d.setDate(d.getDate() + i);
-    return d;
-  });
+  // Генерируем массив дат для колонок (от сегодня до конца года + 30 дней запас)
+  const dates = (() => {
+    const now = new Date();
+    const endOfYear = new Date(now.getFullYear(), 11, 31); // 31 декабря
+    const daysUntilEnd = Math.ceil((endOfYear.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) + 30;
+    const count = Math.max(60, daysUntilEnd); // минимум 60 дней
+    return Array.from({ length: count }, (_, i) => {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      return d;
+    });
+  })();
 
   const formatDate = (d: Date) => d.toISOString().split("T")[0];
 
@@ -199,14 +205,6 @@ export default function AdminDashboard() {
 
       const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
       if (raw === 0) return;
-
-      // DEBUG: логируем для диагностики
-      console.log('[WHEEL]', { 
-        deltaX: e.deltaX, deltaY: e.deltaY, deltaMode: e.deltaMode,
-        scrollLeft: container.scrollLeft, 
-        maxScrollLeft: container.scrollWidth - container.clientWidth,
-        dx: raw * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1)
-      });
 
       // deltaMode: 0=px, 1=line, 2=page
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
