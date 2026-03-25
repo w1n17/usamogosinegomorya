@@ -188,8 +188,12 @@ export default function AdminDashboard() {
       const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
       const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
       const isPointerInside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+      
+      // Проверяем composedPath для sticky-элементов и вложенных ячеек
+      const path = e.composedPath();
+      const isOverContainer = path.some(el => el instanceof HTMLElement && container.contains(el));
 
-      if (!isDragging && !isPointerInside) return;
+      if (!isDragging && !isPointerInside && !isOverContainer) return;
 
       if (container.scrollWidth <= container.clientWidth) return;
 

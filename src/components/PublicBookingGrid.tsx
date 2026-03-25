@@ -51,7 +51,12 @@ export default function PublicBookingGrid() {
       const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
       const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
       const isPointerInside = x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-      if (!isPointerInside) return;
+      
+      // Проверяем composedPath для sticky-элементов и вложенных ячеек
+      const path = e.composedPath();
+      const isOverContainer = path.some(elem => elem instanceof HTMLElement && el.contains(elem));
+      
+      if (!isPointerInside && !isOverContainer) return;
 
       if (el.scrollWidth <= el.clientWidth) return;
 
