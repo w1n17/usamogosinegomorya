@@ -1,5 +1,7 @@
-import { put, list, del } from '@vercel/blob';
+import { put, list } from '@vercel/blob';
 import { NextResponse } from 'next/server';
+
+export const runtime = 'nodejs';
 
 /**
  * API роут для работы с календарем в Vercel Blob.
@@ -144,7 +146,16 @@ export async function POST(request: Request) {
     console.log('[POST] Successfully saved to blob:', url);
     return NextResponse.json({ success: true, url });
   } catch (error) {
+    const err = error as { name?: string; message?: string; code?: string };
     console.error('[POST] Error updating calendar:', error);
-    return NextResponse.json({ error: 'Internal Server Error', details: String(error) }, { status: 500 });
+    return NextResponse.json(
+      {
+        error: 'Internal Server Error',
+        name: err?.name,
+        code: err?.code,
+        message: err?.message,
+      },
+      { status: 500 }
+    );
   }
 }
