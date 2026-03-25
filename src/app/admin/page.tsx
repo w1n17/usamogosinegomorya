@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type MouseEvent, type WheelEvent } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
@@ -169,23 +169,26 @@ export default function AdminDashboard() {
     lastPointerRef.current = { x: e.clientX, y: e.clientY };
   };
 
-  const handleWheel = (e: WheelEvent<HTMLDivElement>) => {
+  useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    // Тачпад обычно дает deltaX, колесо мыши — deltaY.
-    // Мы превращаем любой wheel в горизонтальный скролл, чтобы не нужно было нажимать кнопки.
-    const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-    if (dx === 0) return;
+    const onWheel = (e: WheelEvent) => {
+      // Всегда перехватываем wheel над шахматкой и превращаем его в horizontal scroll.
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (dx === 0) return;
 
-    container.scrollLeft += dx;
-    e.preventDefault();
+      container.scrollLeft += dx;
+      e.preventDefault();
 
-    // Во время выделения не сбиваем drag-select: обновляем координаты
-    if (isDragging) {
-      lastPointerRef.current = { x: e.clientX, y: e.clientY };
-    }
-  };
+      if (isDragging) {
+        lastPointerRef.current = { x: e.clientX, y: e.clientY };
+      }
+    };
+
+    container.addEventListener("wheel", onWheel, { passive: false });
+    return () => container.removeEventListener("wheel", onWheel);
+  }, [isDragging]);
 
   const handleMouseUp = () => {
     if (isDragging && dragRoomId && dragStartIdx !== null && dragEndIdx !== null) {
@@ -391,9 +394,8 @@ export default function AdminDashboard() {
           <div className="bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden">
             <div
               ref={scrollContainerRef}
-              className="overflow-x-auto"
+              className="overflow-x-auto overscroll-contain"
               onMouseMove={handleMouseMove}
-              onWheel={handleWheel}
             >
               <table className="w-max border-collapse table-fixed">
                 <thead>

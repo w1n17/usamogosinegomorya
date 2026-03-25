@@ -32,6 +32,21 @@ export default function PublicBookingGrid() {
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   });
 
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (dx === 0) return;
+      el.scrollLeft += dx;
+      e.preventDefault();
+    };
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   const dates = Array.from({ length: 14 }, (_, i) => {
     const d = new Date(startDate);
     d.setDate(d.getDate() + i);
@@ -92,15 +107,7 @@ export default function PublicBookingGrid() {
 
       <div
         ref={scrollRef}
-        className="overflow-x-auto rounded-2xl"
-        onWheel={(e) => {
-          const el = scrollRef.current;
-          if (!el) return;
-          const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-          if (dx === 0) return;
-          el.scrollLeft += dx;
-          e.preventDefault();
-        }}
+        className="overflow-x-auto rounded-2xl overscroll-contain"
       >
         <table className="w-max border-collapse table-fixed">
           <thead>
