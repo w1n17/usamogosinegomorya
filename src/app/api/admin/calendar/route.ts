@@ -100,12 +100,27 @@ export async function GET() {
       }
     }
 
-    const blobFetchUrl = 'downloadUrl' in calendarBlob && calendarBlob.downloadUrl
+    const downloadUrl = 'downloadUrl' in calendarBlob && calendarBlob.downloadUrl
       ? calendarBlob.downloadUrl
-      : calendarBlob.url;
+      : null;
 
-    const response = await fetch(blobFetchUrl);
-    const data = await response.json();
+    const tryFetchJson = async (url: string, withAuth: boolean) => {
+      const headers = withAuth && process.env.BLOB_READ_WRITE_TOKEN
+        ? { Authorization: `Bearer ${process.env.BLOB_READ_WRITE_TOKEN}` }
+        : undefined;
+
+      const res = await fetch(url, { headers });
+      if (!res.ok) {
+        const text = await res.text().catch(() => '');
+        throw new Error(`Blob fetch failed (${res.status} ${res.statusText}) ${text}`);
+      }
+      return res.json();
+    };
+
+    // Для private-store URL может требовать Authorization, а downloadUrl (если есть) обычно доступен без него.
+    const data = downloadUrl
+      ? await tryFetchJson(downloadUrl, false)
+      : await tryFetchJson(calendarBlob.url, true);
     
     return NextResponse.json(data);
   } catch (error) {
