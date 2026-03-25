@@ -27,24 +27,49 @@ export default function PublicBookingGrid() {
   const [data, setData] = useState<CalendarData | null>(null);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
+  const lastPointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
   });
 
   useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-
-    const onWheel = (e: WheelEvent) => {
-      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (dx === 0) return;
-      el.scrollLeft += dx;
-      e.preventDefault();
+    const onPointerMove = (e: PointerEvent) => {
+      lastPointerRef.current = { x: e.clientX, y: e.clientY };
     };
 
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
+  }, []);
+
+  useEffect(() => {
+    const onWheel = (e: WheelEvent) => {
+      const el = scrollRef.current;
+      if (!el) return;
+
+      const path = (typeof e.composedPath === "function" ? e.composedPath() : []) as EventTarget[];
+      const isFromContainer = path.includes(el);
+      if (!isFromContainer) return;
+
+      if (el.scrollWidth <= el.clientWidth) return;
+
+      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (raw === 0) return;
+
+      const rect = el.getBoundingClientRect();
+      const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
+      const dx = raw * multiplier;
+      const prev = el.scrollLeft;
+      el.scrollLeft += dx;
+
+      if (el.scrollLeft !== prev) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    };
+
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    return () => window.removeEventListener("wheel", onWheel, { capture: true } as any);
   }, []);
 
   const dates = Array.from({ length: 14 }, (_, i) => {
@@ -109,7 +134,7 @@ export default function PublicBookingGrid() {
         ref={scrollRef}
         className="overflow-x-auto rounded-2xl overscroll-contain"
       >
-        <table className="w-max border-collapse table-fixed">
+        <table className="inline-table min-w-max border-collapse table-fixed">
           <thead>
             <tr>
               <th className="sticky left-0 z-20 w-56 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">

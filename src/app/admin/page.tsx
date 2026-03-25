@@ -170,25 +170,66 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    const container = scrollContainerRef.current;
-    if (!container) return;
+    const onPointerMove = (e: PointerEvent) => {
+      lastPointerRef.current = { x: e.clientX, y: e.clientY };
+    };
 
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", onPointerMove);
+  }, []);
+
+  useEffect(() => {
+    // Кросс-девайсный перехват wheel: работаем даже если событие не попало в нужный div.
     const onWheel = (e: WheelEvent) => {
-      // Всегда перехватываем wheel над шахматкой и превращаем его в horizontal scroll.
-      const dx = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (dx === 0) return;
+      const container = scrollContainerRef.current;
+      if (!container) return;
 
+      const path = (typeof e.composedPath === "function" ? e.composedPath() : []) as EventTarget[];
+      const isFromContainer = path.includes(container);
+
+      if (!isDragging && !isFromContainer) return;
+
+      if (container.scrollWidth <= container.clientWidth) return;
+
+      const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      if (raw === 0) return;
+
+      // deltaMode: 0=px, 1=line, 2=page
+      const rect = container.getBoundingClientRect();
+      const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
+      const dx = raw * multiplier;
+
+      const prev = container.scrollLeft;
       container.scrollLeft += dx;
-      e.preventDefault();
 
-      if (isDragging) {
-        lastPointerRef.current = { x: e.clientX, y: e.clientY };
+      if (container.scrollLeft !== prev) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+
+      if (isDragging && dragRoomId) {
+        const x = Number.isFinite(e.clientX) ? e.clientX : lastPointerRef.current.x;
+        const y = Number.isFinite(e.clientY) ? e.clientY : lastPointerRef.current.y;
+        lastPointerRef.current = { x, y };
+
+        // После горизонтальной прокрутки mouseenter не срабатывает, поэтому
+        // обновляем конечный индекс выделения по элементу под курсором.
+        const el = document.elementFromPoint(x, y) as HTMLElement | null;
+        const cell = el?.closest?.('td[data-date-idx][data-room-id]') as HTMLElement | null;
+        if (cell) {
+          const roomId = cell.getAttribute('data-room-id');
+          const idxRaw = cell.getAttribute('data-date-idx');
+          const idx = idxRaw ? Number(idxRaw) : NaN;
+          if (roomId === dragRoomId && Number.isFinite(idx)) {
+            setDragEndIdx(idx);
+          }
+        }
       }
     };
 
-    container.addEventListener("wheel", onWheel, { passive: false });
-    return () => container.removeEventListener("wheel", onWheel);
-  }, [isDragging]);
+    window.addEventListener("wheel", onWheel, { passive: false, capture: true });
+    return () => window.removeEventListener("wheel", onWheel, { capture: true } as any);
+  }, [isDragging, dragRoomId]);
 
   const handleMouseUp = () => {
     if (isDragging && dragRoomId && dragStartIdx !== null && dragEndIdx !== null) {
@@ -397,7 +438,7 @@ export default function AdminDashboard() {
               className="overflow-x-auto overscroll-contain"
               onMouseMove={handleMouseMove}
             >
-              <table className="w-max border-collapse table-fixed">
+              <table className="inline-table min-w-max border-collapse table-fixed">
                 <thead>
                   <tr>
                     <th className="sticky left-0 z-20 w-64 bg-slate-50 border-b border-r border-slate-200 p-4 text-left text-sm font-bold text-slate-700">
