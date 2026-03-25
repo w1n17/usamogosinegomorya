@@ -60,11 +60,18 @@ export default function PublicBookingGrid() {
 
       if (el.scrollWidth <= el.clientWidth) return;
 
-      const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
-      if (raw === 0) return;
+      // Определяем направление скролла
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+      
+      // Если вертикальный скролл преобладает - не перехватываем
+      if (absY > absX * 1.5) return;
+      
+      // Если горизонтальной компоненты нет - тоже не перехватываем
+      if (absX < 0.01) return;
 
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
-      const dx = raw * multiplier;
+      const dx = e.deltaX * multiplier;
       const maxScrollLeft = el.scrollWidth - el.clientWidth;
       el.scrollLeft = Math.max(0, Math.min(maxScrollLeft, el.scrollLeft + dx));
 

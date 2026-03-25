@@ -185,7 +185,7 @@ export default function AdminDashboard() {
   }, []);
 
   useEffect(() => {
-    // Кросс-девайсный перехват wheel: работаем даже если событие не попало в нужный div.
+    // Кросс-девайсный перехват wheel: только для горизонтального скролла.
     const onWheel = (e: WheelEvent) => {
       const container = scrollContainerRef.current;
       if (!container) return;
@@ -203,12 +203,19 @@ export default function AdminDashboard() {
 
       if (container.scrollWidth <= container.clientWidth) return;
 
-      const raw = Math.abs(e.deltaX) > 0.01 ? e.deltaX : e.deltaY;
-      if (raw === 0) return;
+      // Определяем направление скролла
+      const absX = Math.abs(e.deltaX);
+      const absY = Math.abs(e.deltaY);
+      
+      // Если вертикальный скролл преобладает - не перехватываем, позволяем странице скроллиться
+      if (absY > absX * 1.5) return;
+      
+      // Если горизонтальной компоненты нет - тоже не перехватываем
+      if (absX < 0.01) return;
 
       // deltaMode: 0=px, 1=line, 2=page
       const multiplier = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? rect.width : 1;
-      const dx = raw * multiplier;
+      const dx = e.deltaX * multiplier;
 
       const maxScrollLeft = container.scrollWidth - container.clientWidth;
       const next = Math.max(0, Math.min(maxScrollLeft, container.scrollLeft + dx));
