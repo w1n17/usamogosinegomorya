@@ -79,6 +79,89 @@ export default function AdminDashboard() {
     return `${year}-${month}-${day}`;
   };
 
+  // Массовое заполнение цен по периодам (одноразовая операция по кнопке)
+  const applyPriceTemplate = async () => {
+    if (!data) return;
+
+    const confirmed = window.confirm(
+      'Применить шаблон цен для комнат (Блаженство..., Семейное блаженство, Семейные просторы)? Текущие цены в этих комнатах будут перезаписаны на указанных периодах.'
+    );
+    if (!confirmed) return;
+
+    const year = new Date().getFullYear();
+
+    const parseYmd = (ymd: string) => {
+      const [y, m, d] = ymd.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    };
+
+    const setRangePrice = (room: RoomData, fromYmd: string, toYmd: string, price: number) => {
+      const from = parseYmd(fromYmd);
+      const to = parseYmd(toYmd);
+      const cur = new Date(from);
+      while (cur <= to) {
+        const key = formatDate(cur);
+        room.prices[key] = price;
+        cur.setDate(cur.getDate() + 1);
+      }
+    };
+
+    const blissRanges = [
+      { from: `${year}-03-27`, to: `${year}-05-31`, price: 2500 },
+      { from: `${year}-06-01`, to: `${year}-06-30`, price: 3000 },
+      { from: `${year}-07-01`, to: `${year}-07-31`, price: 4000 },
+      { from: `${year}-08-01`, to: `${year}-09-15`, price: 4500 },
+      { from: `${year}-09-16`, to: `${year}-11-30`, price: 2500 },
+    ];
+
+    const familyBlissRanges = [
+      { from: `${year}-03-27`, to: `${year}-05-31`, price: 3000 },
+      { from: `${year}-06-01`, to: `${year}-06-30`, price: 3500 },
+      { from: `${year}-07-01`, to: `${year}-07-31`, price: 4700 },
+      { from: `${year}-08-01`, to: `${year}-09-15`, price: 5000 },
+      { from: `${year}-09-16`, to: `${year}-11-30`, price: 3000 },
+    ];
+
+    const familySpaceRanges = [
+      { from: `${year}-03-27`, to: `${year}-05-31`, price: 3500 },
+      { from: `${year}-06-01`, to: `${year}-06-30`, price: 3800 },
+      { from: `${year}-07-01`, to: `${year}-07-31`, price: 5000 },
+      { from: `${year}-08-01`, to: `${year}-09-15`, price: 5500 },
+      { from: `${year}-09-16`, to: `${year}-11-30`, price: 3500 },
+    ];
+
+    const nextData: CalendarData = {
+      ...data,
+      rooms: data.rooms.map((r) => ({ ...r, prices: { ...r.prices }, bookings: [...r.bookings] })),
+    };
+
+    for (const room of nextData.rooms) {
+      const name = room.name.trim().toLowerCase();
+
+      if (name.startsWith('блаженство')) {
+        for (const range of blissRanges) {
+          setRangePrice(room, range.from, range.to, range.price);
+        }
+      }
+
+      if (name === 'семейное блаженство') {
+        for (const range of familyBlissRanges) {
+          setRangePrice(room, range.from, range.to, range.price);
+        }
+      }
+
+      if (name === 'семейные просторы') {
+        for (const range of familySpaceRanges) {
+          setRangePrice(room, range.from, range.to, range.price);
+        }
+      }
+    }
+
+    nextData.lastUpdated = new Date().toISOString();
+    setData(nextData);
+    await handleSave(nextData);
+  };
+
   useEffect(() => {
     const auth = sessionStorage.getItem("admin_auth");
     if (auth !== "true") {
@@ -430,6 +513,13 @@ export default function AdminDashboard() {
                 <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
+              </button>
+
+              <button
+                onClick={applyPriceTemplate}
+                className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium hover:bg-slate-50 transition-colors"
+              >
+                Заполнить цены
               </button>
 
               <div className="h-8 w-px bg-slate-200 mx-2 hidden sm:block" />
