@@ -158,13 +158,13 @@ export default function PublicBookingGrid() {
         className="overflow-auto rounded-2xl overscroll-contain max-h-[70vh]"
       >
         <table className="inline-table min-w-max border-collapse table-fixed">
-          <thead className="sticky top-0 z-10">
+          <thead className="sticky top-0 z-30">
             <tr>
-              <th className="sticky left-0 z-20 w-56 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
+              <th className="sticky left-0 z-40 w-56 bg-white border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
                 Номер
               </th>
               {dates.map((date) => (
-                <th key={date.getTime()} className="w-20 bg-white/50 border-b border-r border-white/60 p-2 text-center sticky top-0">
+                <th key={date.getTime()} className="w-20 bg-white border-b border-r border-white/60 p-2 text-center sticky top-0">
                   <div className="text-[10px] text-slate-400 font-bold uppercase">{date.toLocaleDateString("ru-RU", { weekday: "short" })}</div>
                   <div className="text-xs font-bold text-slate-600">{date.getDate()} {date.toLocaleDateString("ru-RU", { month: "short" }).replace('.', '')}</div>
                 </th>
@@ -174,7 +174,7 @@ export default function PublicBookingGrid() {
           <tbody>
             {data?.rooms?.map((room) => (
               <tr key={room.id} className="hover:bg-white/40 transition-colors">
-                <td className="sticky left-0 z-10 bg-white/80 backdrop-blur-md border-b border-r border-white/60 p-2">
+                <td className="sticky left-0 z-20 bg-white border-b border-r border-white/60 p-2">
                   <div className="flex items-center gap-2">
                     <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0 border border-slate-100">
                       {room.image && <Image src={room.image} alt="" fill className="object-cover text-[8px]" />}
@@ -205,9 +205,6 @@ export default function PublicBookingGrid() {
             ))}
           </tbody>
         </table>
-      </div>
-      <div className="p-3 bg-white/40 border-t border-white/60 text-[10px] text-slate-500 italic text-center">
-        * Выберите подходящие даты и свяжитесь с нами для бронирования
       </div>
     </div>
   );
