@@ -28,6 +28,7 @@ export default function PublicBookingGrid() {
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const lastPointerRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [startDate, setStartDate] = useState(() => {
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), d.getDate());
@@ -113,6 +114,23 @@ export default function PublicBookingGrid() {
       .catch(() => setLoading(false));
   }, []);
 
+  useEffect(() => {
+    if (!isFullscreen) return;
+
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setIsFullscreen(false);
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [isFullscreen]);
+
   if (loading) {
     return (
       <div className="h-64 flex items-center justify-center">
@@ -121,9 +139,9 @@ export default function PublicBookingGrid() {
     );
   }
 
-  return (
-    <div className="bg-white/60 backdrop-blur-md rounded-2xl border border-white/60 overflow-hidden">
-      <div className="flex items-center justify-between p-4 bg-white/40 border-b border-white/60">
+  const calendar = (
+    <div className={isFullscreen ? "bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xl" : "bg-white/60 backdrop-blur-md rounded-2xl border border-white/60 overflow-hidden"}>
+      <div className={isFullscreen ? "flex items-center justify-between p-4 bg-white border-b border-slate-200" : "flex items-center justify-between p-4 bg-white/40 border-b border-white/60"}>
         <h4 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Наличие мест и цены</h4>
         <div className="flex items-center gap-2">
           <button
@@ -132,7 +150,7 @@ export default function PublicBookingGrid() {
               d.setDate(d.getDate() - 7);
               setStartDate(d);
             }}
-            className="p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"
+            className={isFullscreen ? "p-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-700 transition-colors" : "p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -144,42 +162,62 @@ export default function PublicBookingGrid() {
               d.setDate(d.getDate() + 7);
               setStartDate(d);
             }}
-            className="p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"
+            className={isFullscreen ? "p-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-700 transition-colors" : "p-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors"}
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
+          {!isFullscreen && (
+            <button
+              onClick={() => setIsFullscreen(true)}
+              className="ml-2 px-3 py-2 rounded-xl bg-white/70 hover:bg-white border border-white/60 shadow-sm text-slate-700 transition-colors text-xs font-bold"
+            >
+              На весь экран
+            </button>
+          )}
+          {isFullscreen && (
+            <button
+              onClick={() => setIsFullscreen(false)}
+              className="ml-2 px-3 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 shadow-sm text-slate-700 transition-colors text-xs font-bold"
+            >
+              Закрыть
+            </button>
+          )}
         </div>
       </div>
 
       <div
         ref={scrollRef}
-        className="overflow-auto rounded-2xl overscroll-contain max-h-[70vh]"
+        className={isFullscreen ? "overflow-auto overscroll-contain max-h-[calc(100vh-96px)]" : "overflow-auto rounded-2xl overscroll-contain max-h-[70vh]"}
       >
         <table className="inline-table min-w-max border-collapse table-fixed">
           <thead className="sticky top-0 z-30">
             <tr>
-              <th className="sticky left-0 z-40 w-56 bg-white border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase">
+              <th className={isFullscreen ? "sticky left-0 z-40 w-80 bg-white border-b border-r border-slate-200 p-4 text-left text-xs font-bold text-slate-600 uppercase" : "sticky left-0 z-40 w-56 bg-white border-b border-r border-white/60 p-3 text-left text-xs font-bold text-slate-600 uppercase"}>
                 Номер
               </th>
               {dates.map((date) => (
-                <th key={date.getTime()} className="w-20 bg-white border-b border-r border-white/60 p-2 text-center sticky top-0">
-                  <div className="text-[10px] text-slate-400 font-bold uppercase">{date.toLocaleDateString("ru-RU", { weekday: "short" })}</div>
-                  <div className="text-xs font-bold text-slate-600">{date.getDate()} {date.toLocaleDateString("ru-RU", { month: "short" }).replace('.', '')}</div>
+                <th key={date.getTime()} className={isFullscreen ? "w-24 bg-white border-b border-r border-slate-200 p-3 text-center sticky top-0" : "w-20 bg-white border-b border-r border-white/60 p-2 text-center sticky top-0"}>
+                  <div className={isFullscreen ? "text-[11px] text-slate-400 font-bold uppercase" : "text-[10px] text-slate-400 font-bold uppercase"}>
+                    {date.toLocaleDateString("ru-RU", { weekday: "short" })}
+                  </div>
+                  <div className={isFullscreen ? "text-sm font-bold text-slate-600" : "text-xs font-bold text-slate-600"}>
+                    {date.getDate()} {date.toLocaleDateString("ru-RU", { month: "short" }).replace('.', '')}
+                  </div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
             {data?.rooms?.map((room) => (
-              <tr key={room.id} className="hover:bg-white/40 transition-colors">
-                <td className="sticky left-0 z-20 bg-white border-b border-r border-white/60 p-2">
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0 border border-slate-100">
+              <tr key={room.id} className={isFullscreen ? "hover:bg-slate-50 transition-colors" : "hover:bg-white/40 transition-colors"}>
+                <td className={isFullscreen ? "sticky left-0 z-20 bg-white border-b border-r border-slate-200 p-3" : "sticky left-0 z-20 bg-white border-b border-r border-white/60 p-2"}>
+                  <div className={isFullscreen ? "flex items-center gap-3" : "flex items-center gap-2"}>
+                    <div className={isFullscreen ? "relative w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-slate-200" : "relative w-8 h-8 rounded-md overflow-hidden shrink-0 border border-slate-100"}>
                       {room.image && <Image src={room.image} alt="" fill className="object-cover text-[8px]" />}
                     </div>
-                    <div className="text-[11px] font-bold text-slate-700 leading-tight truncate">
+                    <div className={isFullscreen ? "text-sm font-bold text-slate-700 leading-tight" : "text-[11px] font-bold text-slate-700 leading-tight truncate"}>
                       {room.name}
                     </div>
                   </div>
@@ -190,11 +228,11 @@ export default function PublicBookingGrid() {
                   const isBooked = room.bookings?.some(b => dateStr >= b.from && dateStr < b.to) || false;
 
                   return (
-                    <td key={dateStr} className={`h-12 border-b border-r border-white/60 p-1 text-center ${isBooked ? "bg-rose-50/35" : ""}`}>
+                    <td key={dateStr} className={isFullscreen ? `h-16 border-b border-r border-slate-200 p-2 text-center ${isBooked ? "bg-rose-50/60" : ""}` : `h-12 border-b border-r border-white/60 p-1 text-center ${isBooked ? "bg-rose-50/35" : ""}`}>
                       {isBooked ? (
-                        <div className="text-[9px] font-bold text-rose-400 uppercase tracking-tighter">Занят</div>
+                        <div className={isFullscreen ? "text-[10px] font-bold text-rose-500 uppercase tracking-tighter" : "text-[9px] font-bold text-rose-400 uppercase tracking-tighter"}>Занят</div>
                       ) : (
-                        <div className="text-[11px] font-bold text-slate-600">
+                        <div className={isFullscreen ? "text-sm font-bold text-slate-700" : "text-[11px] font-bold text-slate-600"}>
                           {price > 0 ? `${price}₽` : "—"}
                         </div>
                       )}
@@ -207,5 +245,36 @@ export default function PublicBookingGrid() {
         </table>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      {calendar}
+
+      {isFullscreen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-9999"
+        >
+          <div
+            className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm"
+            onClick={() => setIsFullscreen(false)}
+          />
+          <div className="absolute inset-0 p-3 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.98, y: 10 }}
+              className="mx-auto h-full w-full max-w-[1400px]"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {calendar}
+            </motion.div>
+          </div>
+        </motion.div>
+      )}
+    </>
   );
 }
