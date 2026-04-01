@@ -46,16 +46,17 @@ export default function ApartmentCalendarModal({ open, onClose }: ApartmentCalen
         >
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={handleClose} aria-hidden="true" />
 
-          <div className="absolute inset-0 flex items-center justify-center p-2 sm:p-4">
+          <div className="absolute inset-0">
             <motion.div
-              initial={{ opacity: 0, scale: 0.98, y: 8 }}
+              initial={{ opacity: 0, scale: 0.99, y: 6 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.98, y: 8 }}
+              exit={{ opacity: 0, scale: 0.99, y: 6 }}
               transition={{ duration: 0.22, ease: "easeOut" }}
-              className="relative w-full max-w-[1100px] bg-[#E0F2F1] rounded-[16px] shadow-xl border border-slate-100 overflow-hidden flex flex-col max-h-[90vh]"
+              className="relative w-full h-full bg-[#E0F2F1] shadow-xl overflow-hidden flex flex-col"
               role="dialog"
               aria-modal="true"
               aria-label="Календарь цен и наличия мест"
+              onClick={(e) => e.stopPropagation()}
             >
               <div className="p-4 sm:p-6 border-b border-white/60 flex items-center justify-between bg-white/40 backdrop-blur-sm">
                 <div>
@@ -74,12 +75,8 @@ export default function ApartmentCalendarModal({ open, onClose }: ApartmentCalen
                 </button>
               </div>
 
-              <div className="p-4 sm:p-6 overflow-y-auto grow">
-                <div className="rounded-2xl bg-white/70 backdrop-blur-md border border-white/60 shadow-sm">
-                  <div className="p-3 sm:p-4">
-                    <PublicBookingGrid />
-                  </div>
-                </div>
+              <div className="p-2 sm:p-4 overflow-y-auto grow">
+                <PublicBookingGrid forceFullscreen />
                 
                 <div className="mt-8 p-4 bg-white/60 backdrop-blur-md rounded-2xl border border-white/60">
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4">

@@ -23,7 +23,7 @@ type CalendarData = {
   rooms: RoomData[];
 };
 
-export default function PublicBookingGrid() {
+export default function PublicBookingGrid({ forceFullscreen }: { forceFullscreen?: boolean }) {
   const [data, setData] = useState<CalendarData | null>(null);
   const [loading, setLoading] = useState(true);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -115,6 +115,7 @@ export default function PublicBookingGrid() {
   }, []);
 
   useEffect(() => {
+    if (forceFullscreen) return;
     if (!isFullscreen) return;
 
     const prevOverflow = document.body.style.overflow;
@@ -138,6 +139,8 @@ export default function PublicBookingGrid() {
       </div>
     );
   }
+
+  const fullscreenMode = Boolean(forceFullscreen) || isFullscreen;
 
   const renderCalendar = (fullscreen: boolean) => (
     <div className={fullscreen ? "bg-white h-full w-full overflow-hidden" : "bg-white/60 backdrop-blur-md rounded-2xl border border-white/60 overflow-hidden"}>
@@ -249,7 +252,11 @@ export default function PublicBookingGrid() {
     </div>
   );
 
-  if (isFullscreen) {
+  if (forceFullscreen) {
+    return renderCalendar(true);
+  }
+
+  if (fullscreenMode) {
     return (
       <motion.div
         initial={{ opacity: 0 }}
