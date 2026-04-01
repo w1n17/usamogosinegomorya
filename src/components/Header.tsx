@@ -18,7 +18,7 @@ export default function Header() {
   };
 
   const navItems = [
-    { name: "Номера", href: "#rooms" },
+    { name: "Номера", href: "/#rooms" },
     { name: "Отзывы", href: "/reviews" },
     { name: "Правила проживания", href: "/rules" },
     { name: "Акции", href: "/promotions" },
