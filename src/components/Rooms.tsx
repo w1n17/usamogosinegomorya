@@ -83,8 +83,8 @@ export default function Rooms() {
     ],
     5: [
       "/image/123/blaj3/photo_5235967796057936489_y.jpg",
-      "/image/123/blaj3/photo_5235967796057936479_y (1).jpg",
-      "/image/123/blaj3/photo_5235967796057936481_y (1).jpg",
+      "/image/123/blaj3/photo_5235967796057936479_y.jpg",
+      "/image/123/blaj3/photo_5235967796057936481_y.jpg",
     ],
     6: [
       "/image/123/blaj4/photo_5235967796057936514_y.jpg",
@@ -167,7 +167,7 @@ export default function Rooms() {
       title: "Блаженство 5",
       description:
         "Светлый и уютный номер со всем необходимым для комфортного проживания с прекрасным балконом для посиделок для небольшой компании или семьи.",
-      capacityLabel: "3 местный",
+      capacityLabel: "4 местный",
       tags: ["5 этаж", "Балкон"],
     },
     {
